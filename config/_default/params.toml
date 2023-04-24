@@ -18,7 +18,7 @@ subtitle = "Welcome to my blog"
 [sidebar.avatar]
 enabled = true
 local = true
-src = "img/avatar.png"
+src = "img/z4107378483707_8539a16958a5b902a4ccf7c69a25b2ad.jpg"
 
 [article]
 math = false
