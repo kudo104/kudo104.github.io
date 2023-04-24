@@ -7,7 +7,7 @@ title = "Kudo104 Blog"
 
 [params]
   subtitle = "Hugo is Absurdly Fast!"
-  author = "John Doe"
+  author = "kudo104"
 
 # Theme i18n support
 # Available values: en, fr, id, ja, ko, pt-br, zh-cn, zh-tw, es, de, nl, it, th, el, uk, ar
