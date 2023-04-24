@@ -1,18 +1,18 @@
 # Change baseurl before deploy
 
-baseURL: "https://kudo104.github.io/"
+baseURL: "https://yoursite.example.com/"
 title: "My Hugo Site"
 footnoteReturnLinkContents: "↩"
 permalinks:
-post: /:year/:month/:title/
+  post: /:year/:month/:title/
 params:
-Subtitle: "Hugo is Absurdly Fast!"
-AuthorName: "Jon Doe"
-GitHubUser: "spf13"
-ListOfFoo:
-  - "foo1"
-  - "foo2"
-SidebarRecentLimit: 5
+  Subtitle: "Hugo is Absurdly Fast!"
+  AuthorName: "Jon Doe"
+  GitHubUser: "spf13"
+  ListOfFoo:
+    - "foo1"
+    - "foo2"
+  SidebarRecentLimit: 5
 
 
 # Theme i18n support
