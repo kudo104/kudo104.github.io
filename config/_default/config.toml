@@ -4,7 +4,7 @@ languageCode = "en-us"
 paginate = 5
 title = "Kudo104 Blog"
 [Params]
-  logo = "img/avatar_huda2458f72ce188392d75c5d51cd8e24e_373_300x0_resize_box_3.png"
+  logo = "img/avatar.png"
 
 # Theme i18n support
 # Available values: en, fr, id, ja, ko, pt-br, zh-cn, zh-tw, es, de, nl, it, th, el, uk, ar
