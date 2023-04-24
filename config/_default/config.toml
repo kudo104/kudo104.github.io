@@ -1,4 +1,5 @@
 # Change baseurl before deploy
+
 baseURL: "https://kudo104.github.io/"
 title: "My Hugo Site"
 footnoteReturnLinkContents: "↩"
