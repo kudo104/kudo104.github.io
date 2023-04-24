@@ -1,23 +1,13 @@
 # Change baseurl before deploy
 
-contentDir = "content"
-layoutDir = "layouts"
-publishDir = "public"
-buildDrafts = false
-baseURL = "https://kudo104.github.io"
-canonifyURLs = true
-title = "My Hugo Site"
+baseurl = "https://kudo104.github.io/"
+languageCode = "en-us"
+paginate = 5
+title = "Kudo104 Blog"
 
 [params]
   subtitle = "Hugo is Absurdly Fast!"
   author = "John Doe"
-
-#baseurl = "https://kudo104.github.io/"
-#languageCode = "en-us"
-#paginate = 5
-#title = "Kudo104 Blog"
-#[Params]
-#  logo = "img/avatar.png"
 
 # Theme i18n support
 # Available values: en, fr, id, ja, ko, pt-br, zh-cn, zh-tw, es, de, nl, it, th, el, uk, ar
