@@ -5,7 +5,7 @@ rssFullContent = true
 
 [footer]
 since = 2023
-customText = "kudo104"
+customText = ""
 
 [dateFormat]
 published = "Jan 02, 2006"
@@ -19,6 +19,7 @@ subtitle = "CTFER | REV | BLUE TEAM |"
 enabled = true
 local = true
 src = "img/avatar.png"
+author = kudo104
 
 [article]
 math = false
