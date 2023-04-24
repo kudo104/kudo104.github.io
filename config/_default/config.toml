@@ -4,13 +4,9 @@ contentDir = "content"
 layoutDir = "layouts"
 publishDir = "public"
 buildDrafts = false
-baseURL = "https://yoursite.example.com/"
+baseURL = "https://kudo104.github.io"
 canonifyURLs = true
 title = "My Hugo Site"
-
-[taxonomies]
-  category = "categories"
-  tag = "tags"
 
 [params]
   subtitle = "Hugo is Absurdly Fast!"
