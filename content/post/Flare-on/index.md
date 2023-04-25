@@ -1,6 +1,6 @@
 ---
 title: Flare-on 2022-the challenge that shall not be named
-slug: CTF_CHALLENGE
+slug: Flare-on
 date: 2022-11-30 00:00:00+0000
 image: cover.jpg
 categories:
