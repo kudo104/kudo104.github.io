@@ -1,6 +1,6 @@
 ---
 title: CTF
-image:
+image: CTF.png
 
 # Badge style
 style:
