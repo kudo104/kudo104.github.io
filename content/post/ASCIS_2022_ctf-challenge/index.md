@@ -21,7 +21,7 @@ Tạo file flag.txt và thử thêm nôi dụng là `ASCIS{aaaaaaaaa}` để ch�
 
 ![My Image](3.png)
 
-Tiếp tục re tiếp thì bài này là một dạng vm mình sẽ không nói chi tiết mấy cái này tại thấy dài dòng quá.Bài này cấp phát một vùng nhớ 50 byte có quyền thực thi và set cái tất cả các byte trong vùng nhớ thành 0x90 đây chính là lệnh nop và thêm 2 byte ``\xEB\xFE`` này vào vùng nhớ gần cuối đây chính là lệnh jump nhảy tới chính nó đó.Sau đó nó sẽ tạo Thread vô tận đợi đến khi mà chương trình gọi ``SuspendThread`` để tạm dừng Thread lại.Sau đó chương trình sẽ tính toán và sẽ thực thi từng câu lệnh một trong vùng nhớ này.
+Tiếp tục re tiếp thì bài này là một dạng vm mình sẽ không nói chi tiết mấy cái này tại thấy dài dòng quá.Bài này cấp phát một vùng nhớ 50 byte có quyền thực thi và set cái tất cả các byte trong vùng nhớ thành 0x90 đây chính là lệnh nop và thêm 2 byte ``\xEB\xFE`` này vào vùng nhớ gần cuối đây chính là lệnh jump nhảy tới chính nó đó.Sau đó nó sẽ tạo Thread thực thi vòng lặp vô tận đợi đến khi mà chương trình gọi ``SuspendThread`` để tạm dừng Thread lại.Sau đó chương trình sẽ tính toán và sẽ thực thi từng câu lệnh một trong vùng nhớ này.
 
 ```
 char *__thiscall sub_321040(char *this, _OWORD *a2)
