@@ -1,5 +1,5 @@
 ---
-title: ASCIS-2022-CTF_CHALLENGE
+title: ASCIS 2022-CTF CHALLENGE
 slug: ASCIS-2022-CTF_CHALLENGE
 date: 2022-12-05 00:00:00+0000
 image: cover.jpg
@@ -9,18 +9,14 @@ tags:
     - CTF
 ---
 
-# ctf_challenge
 Tác giả cho 2 file ctf_challenge và output.txt.Đây là một dạng bài phục hồi lại nội dung trong file.
 
-![alt](https://github.com/kudo104/CTF/blob/main/ASCIS/2022/Final/ctf_challenge/picture/2.png)
 
 Bỏ vào ida thì biết được chương trình đọc nội dung flag.txt để encrypt
 
-![alt](https://github.com/kudo104/CTF/blob/main/ASCIS/2022/Final/ctf_challenge/picture/1.png)
 
 Tạo file flag.txt và thử thêm nôi dụng là `ASCIS{aaaaaaaaa}` để chạy file. Hmm nhìn khá là ảo thử lấy đống hex này sang string thử ,chương trình lại cho ra đúng nội dung của flag.
 
-![alt](https://github.com/kudo104/CTF/blob/main/ASCIS/2022/Final/ctf_challenge/picture/3.png)
 
 Tiếp tục re tiếp thì bài này là một dạng vm mình sẽ không nói chi tiết mấy cái này tại thấy dài dòng quá.Bài này cấp phát một vùng nhớ 50 byte có quyền thực thi và set cái tất cả các byte trong vùng nhớ thành 0x90 đây chính là lệnh nop và thêm 2 byte ``\xEB\xFE`` này vào vùng nhớ gần cuối đây chính là lệnh jump nhảy tới chính nó đó.Sau đó nó sẽ tạo Thread vô tận đợi đến khi mà chương trình gọi ``SuspendThread`` để tạm dừng Thread lại.Sau đó chương trình sẽ tính toán và sẽ thực thi từng câu lệnh một trong vùng nhớ này.
 
