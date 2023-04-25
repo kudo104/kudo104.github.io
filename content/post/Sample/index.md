@@ -1,7 +1,7 @@
 ---
 title: SAMPLE ANALYSIS
 slug: Malware
-date: 2022-6-01 00:00:00+0000
+date: 2022-06-01 00:00:00+0000
 image: cover.jpg
 categories:
     - Malware-Analysis
