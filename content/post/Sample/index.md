@@ -4,7 +4,7 @@ slug: Malware
 date: 2022-06-01 00:00:00+0000
 image: cover.jpg
 categories:
-    - Malware-Analysis
+    - Malware
 tags:
     - malware
 ---
