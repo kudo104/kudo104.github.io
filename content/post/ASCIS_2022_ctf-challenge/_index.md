@@ -1,6 +1,6 @@
 ---
-title: CTF_CHALLENGE
-slug: ASCIS
+title: ASCIS-2022-CTF_CHALLENGE
+slug: ASCIS-2022-CTF_CHALLENGE
 date: 2022-12-05 00:00:00+0000
 image: cover.jpg
 categories:
