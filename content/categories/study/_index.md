@@ -1,6 +1,6 @@
 ---
-title: Research
-image: research.png
+title: Study
+image: study.jpg
 
 # Badge style
 style:
