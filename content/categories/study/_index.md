@@ -4,6 +4,6 @@ image: study.jpg
 
 # Badge style
 style:
-    background: "#05FF00"
+    background: "#0B7423"
     color: "#fff"
 ---
