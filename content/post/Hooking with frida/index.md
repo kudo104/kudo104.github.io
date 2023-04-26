@@ -2,7 +2,7 @@
 title: Hooking Windows API with frida
 slug: Research
 date: 2023-4-03 00:00:00+0000
-image: cover.jpg
+image: cover.png
 categories:
     - Research
     - Study
