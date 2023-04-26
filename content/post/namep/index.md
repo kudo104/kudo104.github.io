@@ -38,7 +38,9 @@ Sau khi mình decode resource thì vẫn không biết đây là gì xin hint t�
 Mình run shellcode thì biết nó load 1 file gì đó dump ra và load vào IDA,thì tìm được block này hehe file cần tìm đây rồi.
 
 ![Picture 7](7.png)
+
 ![Picture 8](8.png)
+
 ![Picture 9](9.png)
 
 Mình trace ngược lên trên thì biết flag có chuỗi con ASCI nếu không có thì in ra thông báo “Noob~” và ngược lại.
