@@ -25,7 +25,7 @@ You can based on offset after decompile to hooking funtions not defined in GCC,M
 
 Here is an example. I want to hook the list of functions below to trace the flow of the program.
 
-![my image](1.png)
+![List of funtion](1.png)
 
 You can see table of funtions in IDA.Colum start is the address of function such as 140001DDB,140001AE6,...
 
@@ -83,7 +83,7 @@ sys.stdin.read()
 
 when program loading into process.Windows Loader relies on the PE file structure to load it into the memory.  
 
-![my image](2.png)
+![PE FILE](2.png)
 
 Window Load will mapped relies on ImagBase of Nt HEARDER sometimes that memory is used windows loader will choose another imagebase to load the program into the memory process
 
@@ -95,7 +95,7 @@ You can see that the 'LoadAddress' is 0x7ff6a4b10000, which we need to know in o
 
 Hook is successful, and now we know the flow of the program and how it works.
 
-![my image](5.png)
+![Find imagebase](5.png)
 
 ## Resources
 https://www.ired.team/miscellaneous-reversing-forensics/windows-kernel-internals/instrumenting-windows-apis-with-frida
