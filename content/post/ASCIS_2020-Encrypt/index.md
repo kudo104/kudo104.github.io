@@ -39,6 +39,7 @@ Bài này tên crypto nên mình thử dùng plugin fincrypto thì biết thực
 Mình đặt bp tại 0x56438FFF5BBB debug thì được key là P4nd`p<c8gE;T$F8
 
 ![Pictur 7](7.png)
+
 ![Pictur 8](8.png)
  
 Vậy bài này mình đã đủ thông tin,để thực giải mã mình sẽ dùng libary của pycryptodome.
