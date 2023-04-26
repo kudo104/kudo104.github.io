@@ -1,6 +1,6 @@
 ---
 title: Namep
-slug: Research
+slug: CTF
 date: 2021-08-10 00:00:00+0000
 image: cover.jpg
 categories:
