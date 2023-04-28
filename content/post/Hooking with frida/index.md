@@ -23,7 +23,7 @@ In the program,there are many funtions we want to hook.How we can find addresses
 
 You can based on offset after decompile to hooking funtions not defined in GCC,MSVC,..
 
-Here is an example. I want to hook the list of functions below to trace the flow of the program.
+Example from Line CTF 2023 finish.exe. I want to hook the list of functions below to trace the flow of the program.
 
 ![List of funtion](1.png)
 
@@ -37,39 +37,39 @@ import sys
 session = frida.attach("fishing.exe")
 script = session.create_script("""
 
-Interceptor.attach(ptr("0x7ff6a4b12310"), {
+Interceptor.attach(ptr("0x7ff67a022310"), {
     onEnter(args) {
-        console.log("rc4 :"  + hexdump(args[0]));
+        console.log("cal rc4" + args[0].toInt32());
     }
 });
 
-Interceptor.attach(ptr("0x7ff6a4b117D0"), {
+Interceptor.attach(ptr("0x7ff67a0217D0"), {
     onEnter(args) {
-        console.log("sub_1400017D0 :" + hexdump(args[0]));
+        console.log("call Handle :" + args[0].toInt32());
     }
 });
 
-Interceptor.attach(ptr("0x7ff6a4b11CDF"), {
+Interceptor.attach(ptr("0x7ff67a021CDF"), {
     onEnter(args) {
-        console.log("sub_140001CDF :" + hexdump(args[0]));
+        console.log("call xor 21 :" + args[0].toInt32());
     }
 });
 
-Interceptor.attach(ptr("0x7ff6a4b11D33"), {
+Interceptor.attach(ptr("0x7ff67a021D33"), {
     onEnter(args) {
-        console.log("sub_140001D33 :" + hexdump(args[0]));
+        console.log("call sub 34 :" + args[0].toInt32());
     }
 });
 
-Interceptor.attach(ptr("0x7ff6a4b11D87"), {
+Interceptor.attach(ptr("0x7ff67a021D87"), {
     onEnter(args) {
-        console.log("sub_140001D87 :" + hexdump(args[0]));
+        console.log("call xor 11 :" + args[0].toInt32());
     }
 });
 
-Interceptor.attach(ptr("0x7ff6a4b11DDB"), {
+Interceptor.attach(ptr("0x7ff67a021DDB"), {
     onEnter(args) {
-        console.log("sub_140001DDB :" + hexdump(args[0]));
+        console.log("call add 18 :" + args[0].toInt32());
     }
 });
 
@@ -79,6 +79,7 @@ def on_message(message, data):
 script.on('message', on_message)
 script.load()
 sys.stdin.read()
+
 ```
 
 when program loading into process.Windows Loader relies on the PE file structure to load it into the memory.  
@@ -96,6 +97,10 @@ You can see that the 'LoadAddress' is 0x7ff6a4b10000, which we need to know in o
 Hook is successful, and now we know the flow of the program and how it works.
 
 ![Find imagebase](5.png)
+
+# Flag
+
+```LINECTF{e255cda25f1a8a634b31458d2ec405b6}```
 
 ## Resources
 https://www.ired.team/miscellaneous-reversing-forensics/windows-kernel-internals/instrumenting-windows-apis-with-frida
