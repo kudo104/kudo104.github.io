@@ -49,7 +49,7 @@ Vậy bài này mình đã đủ thông tin,để thực giải mã mình sẽ d
 Mình load file decrypt vào CFF thì biết đó là 1 file ảnh .png
 
 ## FLAG 
-aaaaa
+
 ```ASCIS{C4yp1o_1s_5impl3_b4t_C++_i5_cr4z9}```
  
 
