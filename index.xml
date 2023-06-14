@@ -1,0 +1,1213 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kudo104</title><link>https://kudo104.github.io/</link><description>Recent content on Kudo104</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Mon, 03 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://kudo104.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Hooking Windows API with frida</title><link>https://kudo104.github.io/p/research/</link><pubDate>Mon, 03 Apr 2023 00:00:00 +0000</pubDate><guid>https://kudo104.github.io/p/research/</guid><description>&lt;img src="https://kudo104.github.io/p/research/cover.png" alt="Featured image of post Hooking Windows API with frida" />&lt;h2 id="frida">Frida&lt;/h2>
+&lt;p>Frida is a dynamic instrumentation tool that allows developers and security researchers to inject JavaScript into running processes on mobile and desktop platforms.&lt;/p>
+&lt;h2 id="hooking-a-funtion-at-va">Hooking a funtion at VA&lt;/h2>
+&lt;p>when you read this article,i suggest that you should consider reading this article first &lt;a class="link" href="https://frida.re/docs/functions/" target="_blank" rel="noopener"
+>here&lt;/a>.&lt;/p>
+&lt;p>In the program,there are many funtions we want to hook.How we can find addresses to hook.&lt;/p>
+&lt;p>You can based on offset after decompile to hooking funtions not defined in GCC,MSVC,..&lt;/p>
+&lt;p>Example from Line CTF 2023 finish.exe. I want to hook the list of functions below to trace the flow of the program.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/research/1.png"
+width="556"
+height="234"
+srcset="https://kudo104.github.io/p/research/1_hubd5a066021b3a73774fa99ca8ed3aa46_19657_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/research/1_hubd5a066021b3a73774fa99ca8ed3aa46_19657_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="List of funtion"
+class="gallery-image"
+data-flex-grow="237"
+data-flex-basis="570px"
+>&lt;/p>
+&lt;p>You can see table of funtions in IDA.Colum start is the address of function such as 140001DDB,140001AE6,&amp;hellip;&lt;/p>
+&lt;p>My script frida hook.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">import frida
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">import sys
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">session = frida.attach(&amp;#34;fishing.exe&amp;#34;)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">script = session.create_script(&amp;#34;&amp;#34;&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Interceptor.attach(ptr(&amp;#34;0x7ff67a022310&amp;#34;), {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> onEnter(args) {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> console.log(&amp;#34;cal rc4&amp;#34; + args[0].toInt32());
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">});
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Interceptor.attach(ptr(&amp;#34;0x7ff67a0217D0&amp;#34;), {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> onEnter(args) {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> console.log(&amp;#34;call Handle :&amp;#34; + args[0].toInt32());
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">});
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Interceptor.attach(ptr(&amp;#34;0x7ff67a021CDF&amp;#34;), {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> onEnter(args) {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> console.log(&amp;#34;call xor 21 :&amp;#34; + args[0].toInt32());
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">});
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Interceptor.attach(ptr(&amp;#34;0x7ff67a021D33&amp;#34;), {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> onEnter(args) {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> console.log(&amp;#34;call sub 34 :&amp;#34; + args[0].toInt32());
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">});
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Interceptor.attach(ptr(&amp;#34;0x7ff67a021D87&amp;#34;), {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> onEnter(args) {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> console.log(&amp;#34;call xor 11 :&amp;#34; + args[0].toInt32());
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">});
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Interceptor.attach(ptr(&amp;#34;0x7ff67a021DDB&amp;#34;), {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> onEnter(args) {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> console.log(&amp;#34;call add 18 :&amp;#34; + args[0].toInt32());
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">});
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&amp;#34;&amp;#34;&amp;#34;)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">def on_message(message, data):
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> print(message)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">script.on(&amp;#39;message&amp;#39;, on_message)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">script.load()
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sys.stdin.read()
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>when program loading into process.Windows Loader relies on the PE file structure to load it into the memory.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/research/2.png"
+width="796"
+height="822"
+srcset="https://kudo104.github.io/p/research/2_hu19c1d19f6b60f785e99bb50764054ce5_82542_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/research/2_hu19c1d19f6b60f785e99bb50764054ce5_82542_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="PE FILE"
+class="gallery-image"
+data-flex-grow="96"
+data-flex-basis="232px"
+>&lt;/p>
+&lt;p>Window Load will mapped relies on ImagBase of Nt HEARDER sometimes that memory is used windows loader will choose another imagebase to load the program into the memory process&lt;/p>
+&lt;p>You can use Process Explorer to see where the program is loaded into memory to fine-tune the position of the functions you want to hook.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/research/4.png"
+width="431"
+height="332"
+srcset="https://kudo104.github.io/p/research/4_hu1e5b7bc707fcbe25b48913f33beded81_15458_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/research/4_hu1e5b7bc707fcbe25b48913f33beded81_15458_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="my image"
+class="gallery-image"
+data-flex-grow="129"
+data-flex-basis="311px"
+>&lt;/p>
+&lt;p>You can see that the &amp;lsquo;LoadAddress&amp;rsquo; is 0x7ff6a4b10000, which we need to know in order to fix the script.&lt;/p>
+&lt;p>Hook is successful, and now we know the flow of the program and how it works.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/research/5.png"
+width="489"
+height="238"
+srcset="https://kudo104.github.io/p/research/5_hu2675ac1f3d5ccac8cdf6497461fec278_12950_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/research/5_hu2675ac1f3d5ccac8cdf6497461fec278_12950_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Find imagebase"
+class="gallery-image"
+data-flex-grow="205"
+data-flex-basis="493px"
+>&lt;/p>
+&lt;h1 id="flag">Flag&lt;/h1>
+&lt;p>&lt;code>LINECTF{e255cda25f1a8a634b31458d2ec405b6}&lt;/code>&lt;/p>
+&lt;h2 id="resources">Resources&lt;/h2>
+&lt;p>&lt;a class="link" href="https://www.ired.team/miscellaneous-reversing-forensics/windows-kernel-internals/instrumenting-windows-apis-with-frida" target="_blank" rel="noopener"
+>https://www.ired.team/miscellaneous-reversing-forensics/windows-kernel-internals/instrumenting-windows-apis-with-frida&lt;/a>&lt;/p>
+&lt;p>&lt;a class="link" href="https://fuzzysecurity.com/tutorials/29.html" target="_blank" rel="noopener"
+>https://fuzzysecurity.com/tutorials/29.html&lt;/a>&lt;/p>
+&lt;p>&lt;a class="link" href="https://frida.re/docs/functions/" target="_blank" rel="noopener"
+>https://frida.re/docs/functions/&lt;/a>&lt;/p></description></item><item><title>ASCIS 2022-CTF CHALLENGE</title><link>https://kudo104.github.io/p/ctf_challenge/</link><pubDate>Mon, 05 Dec 2022 00:00:00 +0000</pubDate><guid>https://kudo104.github.io/p/ctf_challenge/</guid><description>&lt;img src="https://kudo104.github.io/p/ctf_challenge/cover.jpg" alt="Featured image of post ASCIS 2022-CTF CHALLENGE" />&lt;p>Tác giả cho 2 file ctf_challenge và output.txt.Đây là một dạng bài phục hồi lại nội dung trong file.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/ctf_challenge/2.png"
+width="749"
+height="37"
+srcset="https://kudo104.github.io/p/ctf_challenge/2_hu421e1b2015093aa02c7e1f7db22cdef8_5177_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/ctf_challenge/2_hu421e1b2015093aa02c7e1f7db22cdef8_5177_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Picture 1"
+class="gallery-image"
+data-flex-grow="2024"
+data-flex-basis="4858px"
+>&lt;/p>
+&lt;p>Bỏ vào ida thì biết được chương trình đọc nội dung flag.txt để encrypt&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/ctf_challenge/1.png"
+width="670"
+height="396"
+srcset="https://kudo104.github.io/p/ctf_challenge/1_huc36a7078df9a5717c3f7df2e54520002_30220_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/ctf_challenge/1_huc36a7078df9a5717c3f7df2e54520002_30220_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Picture 2"
+class="gallery-image"
+data-flex-grow="169"
+data-flex-basis="406px"
+>&lt;/p>
+&lt;p>Tạo file flag.txt và thử thêm nôi dụng là &lt;code>ASCIS{aaaaaaaaa}&lt;/code> để chạy file. Hmm nhìn khá là ảo thử lấy đống hex này sang string thử ,chương trình lại cho ra đúng nội dung của flag.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/ctf_challenge/3.png"
+width="827"
+height="61"
+srcset="https://kudo104.github.io/p/ctf_challenge/3_hufecfbb34a3cc9d667579706437a6671c_7388_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/ctf_challenge/3_hufecfbb34a3cc9d667579706437a6671c_7388_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Picture 3"
+class="gallery-image"
+data-flex-grow="1355"
+data-flex-basis="3253px"
+>&lt;/p>
+&lt;p>Tiếp tục re tiếp thì bài này là một dạng vm mình sẽ không nói chi tiết mấy cái này tại thấy dài dòng quá.Bài này cấp phát một vùng nhớ 50 byte có quyền thực thi và set cái tất cả các byte trong vùng nhớ thành 0x90 đây chính là lệnh nop và thêm 2 byte &lt;code>\xEB\xFE&lt;/code> này vào vùng nhớ gần cuối đây chính là lệnh jump nhảy tới chính nó đó.Sau đó nó sẽ tạo Thread thực thi vòng lặp vô tận đợi đến khi mà chương trình gọi &lt;code>SuspendThread&lt;/code> để tạm dừng Thread lại.Sau đó chương trình sẽ tính toán và sẽ thực thi từng câu lệnh một trong vùng nhớ này.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;span class="lnt">49
+&lt;/span>&lt;span class="lnt">50
+&lt;/span>&lt;span class="lnt">51
+&lt;/span>&lt;span class="lnt">52
+&lt;/span>&lt;span class="lnt">53
+&lt;/span>&lt;span class="lnt">54
+&lt;/span>&lt;span class="lnt">55
+&lt;/span>&lt;span class="lnt">56
+&lt;/span>&lt;span class="lnt">57
+&lt;/span>&lt;span class="lnt">58
+&lt;/span>&lt;span class="lnt">59
+&lt;/span>&lt;span class="lnt">60
+&lt;/span>&lt;span class="lnt">61
+&lt;/span>&lt;span class="lnt">62
+&lt;/span>&lt;span class="lnt">63
+&lt;/span>&lt;span class="lnt">64
+&lt;/span>&lt;span class="lnt">65
+&lt;/span>&lt;span class="lnt">66
+&lt;/span>&lt;span class="lnt">67
+&lt;/span>&lt;span class="lnt">68
+&lt;/span>&lt;span class="lnt">69
+&lt;/span>&lt;span class="lnt">70
+&lt;/span>&lt;span class="lnt">71
+&lt;/span>&lt;span class="lnt">72
+&lt;/span>&lt;span class="lnt">73
+&lt;/span>&lt;span class="lnt">74
+&lt;/span>&lt;span class="lnt">75
+&lt;/span>&lt;span class="lnt">76
+&lt;/span>&lt;span class="lnt">77
+&lt;/span>&lt;span class="lnt">78
+&lt;/span>&lt;span class="lnt">79
+&lt;/span>&lt;span class="lnt">80
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">char *__thiscall sub_321040(char *this, _OWORD *a2)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">{
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> LPVOID v3; // eax
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> _OWORD *v4; // ecx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> char *v5; // ecx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> int v6; // eax
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> int v7; // ecx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> int v8; // eax
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> void *v10; // [esp-10h] [ebp-1Ch]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> void *v11; // [esp-Ch] [ebp-18h]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> LPTHREAD_START_ROUTINE lpStartAddress; // [esp+8h] [ebp-4h]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *this = &amp;amp;VM::`vftable&amp;#39;;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this + 2) = this;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this + 12) = 0i64;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this + 28) = 0i64;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this + 11) = 0;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> lpStartAddress = VirtualAlloc(0, 0x50u, 0x3000u, 0x40u);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this + 16) = VirtualAlloc(0, 0x40u, 0x1000u, 0x40u);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this + 14) = VirtualAlloc(0, 0x40u, 0x3000u, 4u);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> v3 = VirtualAlloc(0, 0xC8u, 0x3000u, 4u);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> v10 = *(this + 14);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this + 17) = v3;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> memset(v10, 0, 0x40u);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> memset(*(this + 17), 0, 0x40u);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> memset(*(this + 16), 0, 0x200u);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> memset(lpStartAddress, 144, 0x50u);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> v4 = *(this + 14);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> if ( v4 )
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> if ( a2 )
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *v4 = *a2;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> v4[1] = a2[1];
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> v4[2] = a2[2];
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> v4[3] = a2[3];
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> goto LABEL_6;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> memset(v4, 0, 0x40u);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *errno() = 22;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> invalid_parameter_noinfo();
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">LABEL_6:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> v5 = *(this + 17);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> if ( v5 )
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> strcpy(v5, &amp;#34;1234567890123456&amp;#34;);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> else
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *errno() = 22;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> invalid_parameter_noinfo();
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this + 15) = lpStartAddress;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(lpStartAddress + 72) = &amp;#39;\xEB&amp;#39;;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(*(this + 15) + 73) = &amp;#39;\xFE&amp;#39;;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this + 376) = CreateThread(0, 0, lpStartAddress, 0, 0, 0);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Sleep(0x3E8u);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> SuspendThread(*(this + 376));
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this + 197) = 65599;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> GetThreadContext(*(this + 376), (this + 788));
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this + 237) = *(this + 17);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this + 236) = *(this + 14);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> v6 = *(this + 16);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> v11 = *(this + 376);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this + 241) = 0;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> v7 = v6 + 384;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this + 238) = 0;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> v6 += 32;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this + 240) = 0;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this + 13) = v6;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this + 246) = v6;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> v8 = *(this + 15);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this + 239) = 0;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this + 12) = v7;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this + 242) = v7;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this + 243) = v8;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> SetThreadContext(v11, (this + 788));
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> return this;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Đáng chú ý trong quá trình debug thì mình bị lỗi segment liên tục thì phát hiện có 1 anti hardware breapoint&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">BOOL __thiscall sub_E1930(int *this)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">{
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> void *v3; // [esp-Ch] [ebp-14h]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> void *v4; // [esp-8h] [ebp-10h]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> SuspendThread(this[376]);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> GetThreadContext(this[376], (this + 197));
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> v3 = this[15];
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> this[243] = v3;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> memset(v3, 0x90, 0x50u);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this[15] + 72) = -21;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this[15] + 73) = -2;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> if ( this[198] || this[199] || this[200] || this[201] )
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this[15] + 72) = 0x90;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this[15] + 73) = 0x90;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> v4 = this[376];
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> this[198] = 0;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> this[199] = 0;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> this[200] = 0;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> this[201] = 0;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> this[202] = 0;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> this[203] = 0;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> return SetThreadContext(v4, (this + 197));
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Đến đây mình patch lại chương trình tưởng có thể chạy ngon lành cành đào rồi nhưng không nó lại in ra đúng nối dung của file flag.txt.Mình thử debug tới câu lệnh cuối cùng trong vùng nhớ rồi in ra thì biết được nó tính độ dài của chuỗi và so sánh với 0x24.Hmm chạy ngon rồi haha.&lt;/p>
+&lt;p>Mình patch lại như sau:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">BOOL __thiscall sub_321930(int *this)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">{
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> void *v3; // [esp-Ch] [ebp-14h]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> void *v4; // [esp-8h] [ebp-10h]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> SuspendThread(this[376]);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> GetThreadContext(this[376], (this + 197));
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> v3 = this[15];
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> this[243] = v3;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> memset(v3, 144, 0x50u);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this[15] + 72) = &amp;#39;\xEB&amp;#39;;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> *(this[15] + 73) = &amp;#39;\xFE&amp;#39;;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> v4 = this[376];
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> this[198] = 0;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> this[199] = 0;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> this[200] = 0;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> this[201] = 0;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> this[202] = 0;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> this[203] = 0;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> return SetThreadContext(v4, (this + 197));
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Mình sử dụng mấy câu lẹnh debug_hook của ida không chạy được nên đành chạy tay lấy từng câu lệnh một click đến khi nào chương trình dừng thì thôi do mình lười emulate lại cái code vm :vv&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">import idaapi
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">import time
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">f = open(&amp;#34;log.txt&amp;#34;,&amp;#34;a&amp;#34;)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">idaapi.run_to(0xB81F93)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">data = []
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"># ea là địa chỉ vùng nhớ được cấp phát 50 byte để thực thi câu lệnh
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">for ea in range(0x950000,0x950006,1):
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> data.append(idc.get_wide_byte(ea))
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">s = &amp;#39; &amp;#39;.join([str(elem) for elem in data])
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">s += &amp;#34;\n&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">f.write(s)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">f.close()
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Sau khi đọc mấy cái code vm này thì biết được đây là mã hóa &lt;code>XTEA&lt;/code>.Đoạn Vm sử dụng Xtea 4 lần mỗi lần là 8 byte ban đầu key là &lt;code>1234567890123456&lt;/code> sau đó nó sẽ thực hiện thay đổi key lần lược như sau xor 4 byte với 0xefbeadde và đặt tại 4 byte tiếp theo.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl"> 0: 89 78 04 mov DWORD PTR [eax+0x4], edi
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 0: 8b 1c 24 mov ebx, DWORD PTR [esp]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 0: 8b 74 24 04 mov esi, DWORD PTR [esp+0x4]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 0: 8b 7c 24 08 mov edi, DWORD PTR [esp+0x8]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 0: 8b 56 04 mov edx, DWORD PTR [esi+0x4]
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 0: bb de ad be ef mov ebx, 0xefbeadde
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 0: 31 da xor edx, ebx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 0: 89 56 08 mov DWORD PTR [esi+0x8], edx
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 0: 81 c7 08 00 00 00 add edi, 0x8
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 0: 89 7d 08 mov DWORD PTR [ebp+0x8], edi
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Đọc các đoạn tiếp theo mình được key và script giải mã flag:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;span class="lnt">49
+&lt;/span>&lt;span class="lnt">50
+&lt;/span>&lt;span class="lnt">51
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">#include &amp;lt;stdint.h&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">#include &amp;lt;stdio.h&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">void decrypt (uint32_t v[2], const uint32_t k[4]) {
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> uint32_t v0 = v[0], v1 = v[1], sum = 0xf1bbcdc8, i; /* set up; sum is (delta &amp;lt;&amp;lt; 5) &amp;amp; 0xFFFFFFFF */
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> uint32_t delta = 0x9E3779B9; /* a key schedule constant */
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> uint32_t k0 = k[0], k1 = k[1], k2 = k[2], k3 = k[3]; /* cache key */
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> for (i=0; i &amp;lt; 8; i++) { /* basic cycle start */
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> v1 -= ((v0 &amp;lt;&amp;lt; 4) + k2) ^ (v0 + sum) ^ ((v0 &amp;gt;&amp;gt; 5) + k3);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> v0 -= ((v1 &amp;lt;&amp;lt; 4) + k0) ^ (v1 + sum) ^ ((v1 &amp;gt;&amp;gt; 5) + k1);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> sum -= delta;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> v[0] = v0; v[1] = v1;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> for(int i = 0;i &amp;lt; 4 ; i ++){
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> printf(&amp;#34;%c&amp;#34;,(v0 &amp;gt;&amp;gt; (8*i)) &amp;amp; 0xff);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> for(int i = 0;i &amp;lt; 4 ; i ++){
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> printf(&amp;#34;%c&amp;#34;,(v1 &amp;gt;&amp;gt; (8*i)) &amp;amp; 0xff);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">int main(){
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> uint32_t key1[4] = {0x34333231,0x38373635, 0x32313039, 0x36353433};
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">// uint32_t hash[8] = {0x32a86394,0xaea320ce, 0x8d1cbc04, 0xb1228e7a, 0x11b1318a,0xb70ad3aa,0xa2708b62,0x820c8b81};
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> uint32_t hash1[2] = {0x32a86394, 0xaea320ce};
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> decrypt(hash1,key1);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">// for(int i =0; i &amp;lt; 4; i++){
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">// uint32_t h[2];
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">// h[0] = hash[i * 2];
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">// h[1] = hash[i * 2 + 1];
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">// printf(&amp;#34;%x %x\n&amp;#34;,h[0],h[1]);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">// decrypt(h,key);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">// }
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> uint32_t key2[4] = {0x34333231,0xDBFE99B8, 0x32313039, 0x36353433};
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> uint32_t hash2[2] = {0x8d1cbc04, 0xb1228e7a};
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> decrypt(hash2,key2);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> uint32_t key3[4] = {0x34333231,0xDBFE99B8, 0x34403466, 0x36353433};
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> uint32_t hash3[2] = {0x11b1318a,0xb70ad3aa};
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> decrypt(hash3,key3);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> uint32_t key4[4] = {0xDADB5450,0xDBFE99B8, 0x34403466, 0x36353433};
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> uint32_t hash4[2] = {0xa2708b62,0x820c8b81};
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> decrypt(hash4,key4);
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> return 0;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">}
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Flag: &lt;code>ASCIS{M@sT3r_0f_V1rtu4l_m4Ch1n3}&lt;/code>&lt;/p></description></item><item><title>Flare-on 2022-the challenge that shall not be named</title><link>https://kudo104.github.io/p/flare-on/</link><pubDate>Wed, 30 Nov 2022 00:00:00 +0000</pubDate><guid>https://kudo104.github.io/p/flare-on/</guid><description>&lt;img src="https://kudo104.github.io/p/flare-on/cover.jpg" alt="Featured image of post Flare-on 2022-the challenge that shall not be named" />&lt;p>Lời đầu tiên mình muốn nói đó là cảm ơn mấy ông anh trong clb đã giúp đỡ mình rất nhiều để mình clear Flare-on 2022 sau nhiều ngày.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/flare-on/flare-on.png"
+width="971"
+height="833"
+srcset="https://kudo104.github.io/p/flare-on/flare-on_hu2607a290cb1d5a1846ab923a2769cdad_55348_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/flare-on/flare-on_hu2607a290cb1d5a1846ab923a2769cdad_55348_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Picture 1"
+class="gallery-image"
+data-flex-grow="116"
+data-flex-basis="279px"
+>&lt;/p>
+&lt;h2 id="1tổng-quan">1.Tổng Quan&lt;/h2>
+&lt;p>Đầu tiên mình ném vào &lt;code>Detect it easy&lt;/code> để có các thông tin cơ bản, chương trình dùng pyinstaller để đóng gói.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/flare-on/1.png"
+width="775"
+height="495"
+srcset="https://kudo104.github.io/p/flare-on/1_hu1d20f5910672d52e41130501dafe6e5c_50906_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/flare-on/1_hu1d20f5910672d52e41130501dafe6e5c_50906_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Picture 2"
+class="gallery-image"
+data-flex-grow="156"
+data-flex-basis="375px"
+>&lt;/p>
+&lt;h2 id="2-unpack-và-phân-tích">2. Unpack và Phân tích&lt;/h2>
+&lt;p>Sử dụng tool có sẵn &lt;code>PyInstaller Extractor&lt;/code> để unpack,file cần reverse 11.pyc&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/flare-on/2.png"
+width="927"
+height="178"
+srcset="https://kudo104.github.io/p/flare-on/2_hu066564a42e5ca96a44dd1657af9d5fc9_10661_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/flare-on/2_hu066564a42e5ca96a44dd1657af9d5fc9_10661_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Picture 3"
+class="gallery-image"
+data-flex-grow="520"
+data-flex-basis="1249px"
+>&lt;/p>
+&lt;p>Sử dụng &lt;code>decpmpile3&lt;/code> hay &lt;code>uncompyle6&lt;/code> để decompile &lt;code>pyc&lt;/code> thành &lt;code>py&lt;/code>.&lt;/p>
+&lt;p>Sau khi decompile thành file py thì chương trình đã bị &lt;code>pyamor&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/flare-on/3.png"
+width="1336"
+height="170"
+srcset="https://kudo104.github.io/p/flare-on/3_hu4832e7f19acff42ad1cf0c3819d7d153_31398_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/flare-on/3_hu4832e7f19acff42ad1cf0c3819d7d153_31398_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Picture 4"
+class="gallery-image"
+data-flex-grow="785"
+data-flex-basis="1886px"
+>&lt;/p>
+&lt;p>Sau khi chạy file 11.py thì biết cần 1 số thư viện khác thử decompile Crypt.pyc tại vì 11.pyc load thèn này đầu tiên nên mình decompile thèn này,thì thấy thư viện này cũng bị pyamor trong khi python là mã nguồn mở và decompile thì những thèn khác không bị.Do đó Crypt.py đã bị custom.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/flare-on/4.png"
+width="796"
+height="130"
+srcset="https://kudo104.github.io/p/flare-on/4_hu0297aab58899f2120d5901823e1e3223_12238_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/flare-on/4_hu0297aab58899f2120d5901823e1e3223_12238_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Picture 5"
+class="gallery-image"
+data-flex-grow="612"
+data-flex-basis="1469px"
+>&lt;/p>
+&lt;p>Thử tạo 1 file rỗng Crypt.py thì biết được nó dùng ARC4.Chỉ cần tạo 1 class ARC4 và in ra là được flag&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/flare-on/5.png"
+width="874"
+height="88"
+srcset="https://kudo104.github.io/p/flare-on/5_huc406b80f0cfede0d9847a623fa8a5f34_10092_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/flare-on/5_huc406b80f0cfede0d9847a623fa8a5f34_10092_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Picture 6"
+class="gallery-image"
+data-flex-grow="993"
+data-flex-basis="2383px"
+>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">class ARC4:
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> def __init__(self, name):
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> self.name = name
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> def encrypt(self,b):
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> print(b)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="3-flag">3. Flag&lt;/h2>
+&lt;p>&lt;code>Pyth0n_Prot3ction_tuRn3d_Up_t0_11@flare-on.com&lt;/code>&lt;/p></description></item><item><title>SAMPLE ANALYSIS</title><link>https://kudo104.github.io/p/malware/</link><pubDate>Wed, 01 Jun 2022 00:00:00 +0000</pubDate><guid>https://kudo104.github.io/p/malware/</guid><description>&lt;img src="https://kudo104.github.io/p/malware/cover.jpg" alt="Featured image of post SAMPLE ANALYSIS" />&lt;h1 id="tổng-quan">Tổng quan&lt;/h1>
+&lt;p>Load File vào detect it easy và CFF explore để có cái nhìn tổng quan về mẫu mã độc sample.exe&lt;/p>
+&lt;ul>
+&lt;li>File 32bit&lt;/li>
+&lt;li>Dung lượng 730kb nhưng import table chỉ sử dụng 1 số api có thể bị packed&lt;/li>
+&lt;/ul>
+&lt;h2 id="phân-tích-tỉnh-và-phân-tích-động">Phân tích tỉnh và phân tích động&lt;/h2>
+&lt;p>Tool sử dụng Ida&lt;/p>
+&lt;ol>
+&lt;li>Phân tích file sample.exe&lt;/li>
+&lt;/ol>
+&lt;ul>
+&lt;li>Phân tích &amp;amp; rename lại hàm để dễ dàng phân tích:&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://kudo104.github.io/p/malware/Picture1.png"
+width="938"
+height="634"
+srcset="https://kudo104.github.io/p/malware/Picture1_hu02bd5087798e617d4d461bf9b407d68e_82187_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/malware/Picture1_hu02bd5087798e617d4d461bf9b407d68e_82187_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="My Image"
+class="gallery-image"
+data-flex-grow="147"
+data-flex-basis="355px"
+>&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/malware/Picture3.png"
+width="397"
+height="120"
+srcset="https://kudo104.github.io/p/malware/Picture3_hu853fd317df2501dba89cc189531a53f1_6184_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/malware/Picture3_hu853fd317df2501dba89cc189531a53f1_6184_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="My Image"
+class="gallery-image"
+data-flex-grow="330"
+data-flex-basis="794px"
+>&lt;/p>
+&lt;ul>
+&lt;li>Dữ liệu mã hóa bằng phép xor khá đơn giản sau khi thử giải mã vài byte đầu thì thấy kí hiệu MZ của cấu trúc PE&lt;/li>
+&lt;li>Sử dụng một funtion inject để inject string vào trong câu trúc PE sau khi đã giải mã.Như hình trên thì
+String “xmr-usa.dwarfpool.com:8050” tại vị trí 74688 inject vào PE_data&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>Xử kí &amp;amp; thực thi PE_data&lt;/p>
+&lt;/blockquote>
+&lt;p>Hàm sub_13D1350&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/malware/Picture3.png"
+width="397"
+height="120"
+srcset="https://kudo104.github.io/p/malware/Picture3_hu853fd317df2501dba89cc189531a53f1_6184_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/malware/Picture3_hu853fd317df2501dba89cc189531a53f1_6184_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="My Image"
+class="gallery-image"
+data-flex-grow="330"
+data-flex-basis="794px"
+>&lt;/p>
+&lt;p>Cấp phát vùng nhớ có quyền thực thi sau đó copy toán bộ PE data vào trong vùng nhớ:&lt;/p>
+&lt;blockquote>
+&lt;p>Hàm sub_13D12C3&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://kudo104.github.io/p/malware/Picture4.png"
+width="650"
+height="555"
+srcset="https://kudo104.github.io/p/malware/Picture4_huda81986730130ea0a980cd42faa31ec3_42671_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/malware/Picture4_huda81986730130ea0a980cd42faa31ec3_42671_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="My Image"
+class="gallery-image"
+data-flex-grow="117"
+data-flex-basis="281px"
+>&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/malware/Picture5.png"
+width="423"
+height="141"
+srcset="https://kudo104.github.io/p/malware/Picture5_hue73479c42bb8705aca22b2bcdbb6640d_9584_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/malware/Picture5_hue73479c42bb8705aca22b2bcdbb6640d_9584_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="My Image"
+class="gallery-image"
+data-flex-grow="300"
+data-flex-basis="720px"
+>&lt;/p>
+&lt;ul>
+&lt;li>Hàm này xử lí tìm kiếm địa chỉ IAT của PE_data và sử dụng hàm loadmodule tương ứng để tìm kiếm các địa chỉ tương ứng với các api trong PE_data việc này giống như ánh xạ vào không gian địa chỉ process bằng thủ công thay vì windowloader sẽ có nhiệm vụ này&lt;/li>
+&lt;/ul>
+&lt;p>Thực thi 1 process khác trong sample.exe&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/malware/Picture6.png"
+width="322"
+height="184"
+srcset="https://kudo104.github.io/p/malware/Picture6_hu593f658f5491277347685fde1cc1cb11_8635_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/malware/Picture6_hu593f658f5491277347685fde1cc1cb11_8635_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="My Image"
+class="gallery-image"
+data-flex-grow="175"
+data-flex-basis="420px"
+>&lt;/p>
+&lt;p>Sau khi tìm kiếm các các địa chỉ api trên các module kernel32.dll,user32.dll,…thì nó sẽ thực thi file tại AddressOfEntryPoint dựa trên câu trúc PE file&lt;/p>
+&lt;p>Để tiện lợi cho việc phân tích thì mình sẽ dump dữ liệu ra thì có 2 cách:&lt;/p>
+&lt;ul>
+&lt;li>Có thể sử dụng plugin OllDumpEx trong x64dbg để dump&lt;/li>
+&lt;li>Dùng idapython&lt;/li>
+&lt;/ul>
+&lt;p>Sau khi dump đặt tên là dump_sample&lt;/p>
+&lt;h2 id="phân-tích-file-dump_sample">Phân tích file dump_sample&lt;/h2>
+&lt;p>&lt;img src="https://kudo104.github.io/p/malware/Picture7.png"
+width="908"
+height="607"
+srcset="https://kudo104.github.io/p/malware/Picture7_hu27f53552032fc8bfe5544c599f92f02f_67175_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/malware/Picture7_hu27f53552032fc8bfe5544c599f92f02f_67175_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="My Image"
+class="gallery-image"
+data-flex-grow="149"
+data-flex-basis="359px"
+>&lt;/p>
+&lt;p>Sử dụng api CreateDirectoryW để tạo folder “C:\Users\user\AppData\Local\hjfdWLFJwt”&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/malware/Picture8.png"
+width="515"
+height="210"
+srcset="https://kudo104.github.io/p/malware/Picture8_hu4172c4361adb976b5b6265c2986817f4_13400_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/malware/Picture8_hu4172c4361adb976b5b6265c2986817f4_13400_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="My Image"
+class="gallery-image"
+data-flex-grow="245"
+data-flex-basis="588px"
+>&lt;/p>
+&lt;p>Tại folder mới tạo 1 file executable taskman.exe&lt;/p>
+&lt;blockquote>
+&lt;p>Hàm registry&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://kudo104.github.io/p/malware/Picture9.png"
+width="806"
+height="666"
+srcset="https://kudo104.github.io/p/malware/Picture9_hu81cd4de545f8ea9d5417ae5188192f2e_46279_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/malware/Picture9_hu81cd4de545f8ea9d5417ae5188192f2e_46279_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="My Image"
+class="gallery-image"
+data-flex-grow="121"
+data-flex-basis="290px"
+>&lt;/p>
+&lt;p>Nếu “SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce” đã được tạo thì sẽ thực hiện lấy giá trị tại “ftwdGcTbXm” và ngược lại&lt;/p>
+&lt;h2 id="hàm-handleprocessx32">Hàm handleProcessx32&lt;/h2>
+&lt;p>&lt;img src="https://kudo104.github.io/p/malware/Picture10.png"
+width="862"
+height="635"
+srcset="https://kudo104.github.io/p/malware/Picture10_hu213b9b4be8b3dcada14f1e10df60b3ce_71855_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/malware/Picture10_hu213b9b4be8b3dcada14f1e10df60b3ce_71855_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="My Image"
+class="gallery-image"
+data-flex-grow="135"
+data-flex-basis="325px"
+>&lt;/p>
+&lt;p>Đoạn đầu khá giống với hàm handleProcessx64 việc tạo ra 1 process notepad với cmd =’ -a cryptonight -o stratum+tcp://xmr-usa.dwarfpool.com:8050 -u 4JUdGzvrMFDWrUUwY3toJATSeNwjn54LkCnKBPRzDuhzi5vSepHfUckJNxRL2gjkNrSqtCoRUrEDAgRwsQvVCjZbS3d2ZdUYfaKLkAbBLe -p x -t 2’&lt;/p>
+&lt;p>Sau khi hàm này tạo ra process mới thì viết vào vùng nhớ của process đó một cấu trúc PE_data sau đó tiếp tục thực thi process&lt;/p>
+&lt;blockquote>
+&lt;p>Dump &amp;amp; phân tích PE_data2&lt;/p>
+&lt;/blockquote>
+&lt;p>Detect it easy thì File bị packed bằng upx sau khi unpacked upx như hình bên dưới:&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/malware/Picture11.png"
+width="734"
+height="469"
+srcset="https://kudo104.github.io/p/malware/Picture11_hu4305c961b2007d53ec373ebee9c53159_40787_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/malware/Picture11_hu4305c961b2007d53ec373ebee9c53159_40787_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="My Image"
+class="gallery-image"
+data-flex-grow="156"
+data-flex-basis="375px"
+>&lt;/p>
+&lt;p>Các option tìm thấy trong hàm handleArg,argv &amp;amp; agrc chính cmd khi tạo với proccess notepad.exe&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/malware/Picture12.png"
+width="515"
+height="501"
+srcset="https://kudo104.github.io/p/malware/Picture12_hufbc690027cc388c2e559ea747bb3976d_35883_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/malware/Picture12_hufbc690027cc388c2e559ea747bb3976d_35883_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="My Image"
+class="gallery-image"
+data-flex-grow="102"
+data-flex-basis="246px"
+>&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/malware/Picture13.png"
+width="851"
+height="695"
+srcset="https://kudo104.github.io/p/malware/Picture13_hu6c54e4ea983a625d9cc6c1a010afe373_93666_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/malware/Picture13_hu6c54e4ea983a625d9cc6c1a010afe373_93666_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="My Image"
+class="gallery-image"
+data-flex-grow="122"
+data-flex-basis="293px"
+>&lt;/p>
+&lt;ul>
+&lt;li>-a Specifiy the algorithm to use: Cryptonight&lt;/li>
+&lt;li>
+&lt;ul>
+&lt;li>o URL of mining server:
+stratum+tcp://xmr-usa.dwarfpool.com:8050&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>-u username for mining server&lt;/li>
+&lt;li>-p password for mining server&lt;/li>
+&lt;li>-t number of miner threads (default: number of processors)&lt;/li>
+&lt;/ul>
+&lt;p>Sau khi tra các string option trên google tìm được project (&lt;a class="link" href="https://github.com/tpruvot/cpuminer-multi" target="_blank" rel="noopener"
+>https://github.com/tpruvot/cpuminer-multi&lt;/a>) so sánh với Pseudocode trên Ida thì khá giống với project này đây là công cụ sử dụng khai thác crypto&lt;/p>
+&lt;h2 id="hàm-handleprocessx64">Hàm handleProcessx64&lt;/h2>
+&lt;p>&lt;img src="https://kudo104.github.io/p/malware/Picture14.png"
+width="1071"
+height="253"
+srcset="https://kudo104.github.io/p/malware/Picture14_huf04152dbc713485d6da65c90f06ebe13_17619_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/malware/Picture14_huf04152dbc713485d6da65c90f06ebe13_17619_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="My Image"
+class="gallery-image"
+data-flex-grow="423"
+data-flex-basis="1015px"
+>&lt;/p>
+&lt;p>Tạo process notepad.exe với cmd = ‘ -a cryptonight -o stratum+tcp://xmr-usa.dwarfpool.com:8050 -u4JUdGzvrMFDWrUUwY3toJATSeNwjn54LkCnKBPRzDuhzi5vSepHfUckJNxRL2gjkNrSqtCoRUrEDAgRwsQvVCjZbS3d2ZdUYfaKLkAbBLe -p x -t 2&lt;/p>
+&lt;p>Sau khi tạo process thì dùng api NtWriteVirtualMemory nó tương tự như WriteProcessMemory cũng có cấu trúc PE được viết vào vùng nhớ process&lt;/p>
+&lt;blockquote>
+&lt;p>Dump &amp;amp; phân tích processx64&lt;/p>
+&lt;/blockquote>
+&lt;p>Detect it easy thì File bị packed bằng upx sau khi unpacked upx như hình bên dưới:&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/malware/Picture15.png"
+width="740"
+height="467"
+srcset="https://kudo104.github.io/p/malware/Picture15_hua4b73b2c2c5634aeb30b826071886083_41155_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/malware/Picture15_hua4b73b2c2c5634aeb30b826071886083_41155_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="My Image"
+class="gallery-image"
+data-flex-grow="158"
+data-flex-basis="380px"
+>&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/malware/Picture16.png"
+width="848"
+height="516"
+srcset="https://kudo104.github.io/p/malware/Picture16_hucd560fd851e0a2c8b90821a735532527_48372_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/malware/Picture16_hucd560fd851e0a2c8b90821a735532527_48372_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="My Image"
+class="gallery-image"
+data-flex-grow="164"
+data-flex-basis="394px"
+>&lt;/p>
+&lt;p>Các option tìm thấy trong hàm parse_arg,argv &amp;amp; agrc tương tự như handleProcessx32&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/malware/Picture17.png"
+width="634"
+height="516"
+srcset="https://kudo104.github.io/p/malware/Picture17_hu0b09ba56bf673a8f91107726f3014786_48484_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/malware/Picture17_hu0b09ba56bf673a8f91107726f3014786_48484_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="My Image"
+class="gallery-image"
+data-flex-grow="122"
+data-flex-basis="294px"
+>&lt;/p>
+&lt;h1 id="tổng-kết">Tổng kết&lt;/h1>
+&lt;ul>
+&lt;li>Mã độc sinh ra proccess notepad nhằm mục đích ẩn đi chương trình khai thác crypto&lt;/li>
+&lt;li>Các kĩ thuật đặc biệt sử dụng
+Anti-reverse:upx,anti-diassembly,ịnject string&lt;/li>
+&lt;li>Mục đích chính của mã độc thực hiện khai thác crypto&lt;/li>
+&lt;/ul></description></item><item><title>Archives</title><link>https://kudo104.github.io/archives/</link><pubDate>Sun, 06 Mar 2022 00:00:00 +0000</pubDate><guid>https://kudo104.github.io/archives/</guid><description/></item><item><title>Namep</title><link>https://kudo104.github.io/p/ctf/</link><pubDate>Tue, 10 Aug 2021 00:00:00 +0000</pubDate><guid>https://kudo104.github.io/p/ctf/</guid><description>&lt;img src="https://kudo104.github.io/p/ctf/cover.jpg" alt="Featured image of post Namep" />&lt;h2 id="phân-tích">Phân tích&lt;/h2>
+&lt;p>Chạy file Namep.exe&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/ctf/1.png"
+width="558"
+height="185"
+srcset="https://kudo104.github.io/p/ctf/1_hu5fbc56e864fa4b8271465729ad2404b9_11582_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/ctf/1_hu5fbc56e864fa4b8271465729ad2404b9_11582_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Picture 1"
+class="gallery-image"
+data-flex-grow="301"
+data-flex-basis="723px"
+>&lt;/p>
+&lt;p>Load file vào CFF explorer để biết được file có resource,mình thấy không có định đạng nên chắc đã bị encode.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/ctf/2.png"
+width="602"
+height="305"
+srcset="https://kudo104.github.io/p/ctf/2_hu34add94b1738e2d7049698ccd1baafbf_121403_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/ctf/2_hu34add94b1738e2d7049698ccd1baafbf_121403_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Picture 2"
+class="gallery-image"
+data-flex-grow="197"
+data-flex-basis="473px"
+>&lt;/p>
+&lt;p>Load file vào IDA.&lt;/p>
+&lt;p>Sau một lúc phân tích thì biết file này load resource sau đó decode resource và thực thi cái resource.&lt;/p>
+&lt;p>Việc decode thực hiện phép xor mặc định với 0x33&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/ctf/3.png"
+width="602"
+height="291"
+srcset="https://kudo104.github.io/p/ctf/3_huc0b0f76467846136fe7b8404a394a661_78408_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/ctf/3_huc0b0f76467846136fe7b8404a394a661_78408_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Picture 3"
+class="gallery-image"
+data-flex-grow="206"
+data-flex-basis="496px"
+>&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/ctf/4.png"
+width="532"
+height="129"
+srcset="https://kudo104.github.io/p/ctf/4_hud95c29f835623656a7dfdd4d252c565a_12385_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/ctf/4_hud95c29f835623656a7dfdd4d252c565a_12385_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Picture 4"
+class="gallery-image"
+data-flex-grow="412"
+data-flex-basis="989px"
+>&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/ctf/5.png"
+width="602"
+height="239"
+srcset="https://kudo104.github.io/p/ctf/5_hu0b3d5990148aeb1a1743b189fae7cf03_66108_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/ctf/5_hu0b3d5990148aeb1a1743b189fae7cf03_66108_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Picture 5"
+class="gallery-image"
+data-flex-grow="251"
+data-flex-basis="604px"
+>&lt;/p>
+&lt;p>Sau khi mình decode resource thì vẫn không biết đây là gì xin hint từ ông anh mới biết đây là một shellcode.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/ctf/6.png"
+width="602"
+height="452"
+srcset="https://kudo104.github.io/p/ctf/6_huf44661eba09efddbb839ffc624e43b6b_175939_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/ctf/6_huf44661eba09efddbb839ffc624e43b6b_175939_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Picture 6"
+class="gallery-image"
+data-flex-grow="133"
+data-flex-basis="319px"
+>&lt;/p>
+&lt;p>Mình run shellcode thì biết nó load 1 file gì đó dump ra và load vào IDA,thì tìm được block này hehe file cần tìm đây rồi.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/ctf/7.png"
+width="518"
+height="189"
+srcset="https://kudo104.github.io/p/ctf/7_hu8a8541d1fcedfc82b2e01dbe666163ac_16676_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/ctf/7_hu8a8541d1fcedfc82b2e01dbe666163ac_16676_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Picture 7"
+class="gallery-image"
+data-flex-grow="274"
+data-flex-basis="657px"
+>&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/ctf/8.png"
+width="602"
+height="484"
+srcset="https://kudo104.github.io/p/ctf/8_huf3f8251dd063d0749c54e9a863d42158_116582_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/ctf/8_huf3f8251dd063d0749c54e9a863d42158_116582_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Picture 8"
+class="gallery-image"
+data-flex-grow="124"
+data-flex-basis="298px"
+>&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/ctf/9.png"
+width="468"
+height="230"
+srcset="https://kudo104.github.io/p/ctf/9_hu6ac70e3a1b6652cdbd734d69524aae6f_19112_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/ctf/9_hu6ac70e3a1b6652cdbd734d69524aae6f_19112_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Picture 9"
+class="gallery-image"
+data-flex-grow="203"
+data-flex-basis="488px"
+>&lt;/p>
+&lt;p>Mình trace ngược lên trên thì biết flag có chuỗi con ASCI nếu không có thì in ra thông báo “Noob~” và ngược lại.&lt;/p>
+&lt;p>Tiếp tục trace lên trên thì flag được decode bằng mã hóa rc4,mình biết được chuỗi đầu ra nhưng không biết key bao nhiêu byte tiếp tục trace thì key được trả về tại hàm sub_100017A0().Sau một lúc phân tích thì key chỉ có 4 byte,vậy bài này mình đã đủ thông tin để brute.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/ctf/10.png"
+width="544"
+height="578"
+srcset="https://kudo104.github.io/p/ctf/10_hu87fccc80ae043da38381df3d18226de7_172939_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/ctf/10_hu87fccc80ae043da38381df3d18226de7_172939_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Picture 10"
+class="gallery-image"
+data-flex-grow="94"
+data-flex-basis="225px"
+>&lt;/p>
+&lt;p>Đây là code của mình.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/ctf/11.png"
+width="515"
+height="662"
+srcset="https://kudo104.github.io/p/ctf/11_hud85d85e2ad163e0c94ebb50129486715_33971_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/ctf/11_hud85d85e2ad163e0c94ebb50129486715_33971_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Picture 11"
+class="gallery-image"
+data-flex-grow="77"
+data-flex-basis="186px"
+>&lt;/p>
+&lt;h2 id="flag">FLAG&lt;/h2>
+&lt;p>&lt;code>ASCIS{a_s1mpl3_pr0toco1}&lt;/code>&lt;/p></description></item><item><title>ASCIS 2020-Crypt</title><link>https://kudo104.github.io/p/ascis/</link><pubDate>Thu, 05 Aug 2021 00:00:00 +0000</pubDate><guid>https://kudo104.github.io/p/ascis/</guid><description>&lt;img src="https://kudo104.github.io/p/ascis/cover.jpg" alt="Featured image of post ASCIS 2020-Crypt" />&lt;h2 id="phân-tích">Phân tích&lt;/h2>
+&lt;p>Đây là một chall thực hiện hiện encrypt file,file thưc hiên encrypt với 2 tham số là “file key” và không phải key tùy chọn mà là key mặc định.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/ascis/1.png"
+width="599"
+height="147"
+srcset="https://kudo104.github.io/p/ascis/1_hu75572198e7051d9329e8f09a1a51b9e6_4291_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/ascis/1_hu75572198e7051d9329e8f09a1a51b9e6_4291_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Pictur 1"
+class="gallery-image"
+data-flex-grow="407"
+data-flex-basis="977px"
+>&lt;/p>
+&lt;p>Load vào IDA ta có flow của chương trình.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/ascis/2.png"
+width="420"
+height="446"
+srcset="https://kudo104.github.io/p/ascis/2_hubad993aa6e2be9c5ccf01006b194dab3_9900_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/ascis/2_hubad993aa6e2be9c5ccf01006b194dab3_9900_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Pictur 2"
+class="gallery-image"
+data-flex-grow="94"
+data-flex-basis="226px"
+>&lt;/p>
+&lt;p>Mình tìm kiếm chuỗi “wrong key” sau đó trace ngược lên tại hàm sub_55D62DCA75AE() debug thì biết nó thực hiện so sánh 2 chuỗi số nếu đúng thì bắt đầu encrypt file còn không thì hiện lên màn hình “wrong key” như hình bên trên.&lt;/p>
+&lt;p>Tiếp tục mình trace theo [rbp+var_240] thì biết input+1483973472739663,sau đó thì tại sub_55D62DCA75AE() so sánh với 4634706992063332.&lt;/p>
+&lt;p>He he vậy key=3150733519323669&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/ascis/3.png"
+width="602"
+height="104"
+srcset="https://kudo104.github.io/p/ascis/3_huf671a11b89182cdebca0c4df82e099a2_50253_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/ascis/3_huf671a11b89182cdebca0c4df82e099a2_50253_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Pictur 3"
+class="gallery-image"
+data-flex-grow="578"
+data-flex-basis="1389px"
+>&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/ascis/4.png"
+width="472"
+height="38"
+srcset="https://kudo104.github.io/p/ascis/4_hu316d09a8a7db7d0b92ca698106e0f128_2586_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/ascis/4_hu316d09a8a7db7d0b92ca698106e0f128_2586_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Pictur 4"
+class="gallery-image"
+data-flex-grow="1242"
+data-flex-basis="2981px"
+>&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/ascis/5.png"
+width="474"
+height="28"
+srcset="https://kudo104.github.io/p/ascis/5_hu3fd4030223e4b4e7610918b5dceee044_2059_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/ascis/5_hu3fd4030223e4b4e7610918b5dceee044_2059_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Pictur 5"
+class="gallery-image"
+data-flex-grow="1692"
+data-flex-basis="4062px"
+>&lt;/p>
+&lt;p>Bài này tên crypto nên mình thử dùng plugin fincrypto thì biết thực hiện mã hóa file bằng thuật toán mã hóa AES_ECB&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/ascis/6.png"
+width="602"
+height="80"
+srcset="https://kudo104.github.io/p/ascis/6_hu14ed403e597c2ac8e9027b85e75acb60_53876_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/ascis/6_hu14ed403e597c2ac8e9027b85e75acb60_53876_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Pictur 6"
+class="gallery-image"
+data-flex-grow="752"
+data-flex-basis="1806px"
+>&lt;/p>
+&lt;p>Mình đặt bp tại 0x56438FFF5BBB debug thì được key là P4nd`p&amp;lt;c8gE;T$F8&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/ascis/7.png"
+width="388"
+height="246"
+srcset="https://kudo104.github.io/p/ascis/7_hu9f2040e34977ca4932b99414a07ed984_19737_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/ascis/7_hu9f2040e34977ca4932b99414a07ed984_19737_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Pictur 7"
+class="gallery-image"
+data-flex-grow="157"
+data-flex-basis="378px"
+>&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/ascis/8.png"
+width="571"
+height="16"
+srcset="https://kudo104.github.io/p/ascis/8_hu8b1462ed102ca58082d934f2e168997a_2994_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/ascis/8_hu8b1462ed102ca58082d934f2e168997a_2994_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Pictur 8"
+class="gallery-image"
+data-flex-grow="3568"
+data-flex-basis="8565px"
+>&lt;/p>
+&lt;p>Vậy bài này mình đã đủ thông tin,để thực giải mã mình sẽ dùng libary của pycryptodome.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/ascis/9.png"
+width="375"
+height="154"
+srcset="https://kudo104.github.io/p/ascis/9_hu94baed99abc9aaef73789480fdf97ff0_8671_480x0_resize_box_3.png 480w, https://kudo104.github.io/p/ascis/9_hu94baed99abc9aaef73789480fdf97ff0_8671_1024x0_resize_box_3.png 1024w"
+loading="lazy"
+alt="Pictur 9"
+class="gallery-image"
+data-flex-grow="243"
+data-flex-basis="584px"
+>&lt;/p>
+&lt;p>Mình load file decrypt vào CFF thì biết đó là 1 file ảnh .png&lt;/p>
+&lt;h2 id="flag">FLAG&lt;/h2>
+&lt;p>&lt;code>ASCIS{C4yp1o_1s_5impl3_b4t_C++_i5_cr4z9}&lt;/code>&lt;/p></description></item><item><title>About</title><link>https://kudo104.github.io/about/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kudo104.github.io/about/</guid><description>&lt;p>My name is Hy Minh, also know under my nickname Kudo104.Category ctf is reverse engineering&lt;/p>
+&lt;p>My current intern at NCS focus Blue team |Malware Analysis | Incident response.&lt;/p></description></item><item><title>Search</title><link>https://kudo104.github.io/search/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://kudo104.github.io/search/</guid><description/></item></channel></rss>
