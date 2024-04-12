@@ -1,8 +1,8 @@
 ---
 title: Cobalt Strike
 slug: Malware
-date: 2022-28-12 00:00:00+0000
-image: cover.jpg
+date: 2022-12-28 00:00:00+0000
+image: CobaltStrike.jpg
 categories:
     - Malware
 tags:
