@@ -19,7 +19,7 @@ Sơ đồ hoạt động:
 
 Quá trình xử lý sự cố chúng tôi thu thập được mẫu mã độc có tên cdpsgshims.dll tại thư mục `C:\Windows\System32`, rà soát cùng thư mục cũng phát hiện file MapData.dat có ngày và thời gian tạo tương đồng với file cdpsgshims.dll (Ngoài ra cũng phát hiện file này tại đường dẫn `C:\ProgramData\Microsoft\MapDat`, đây là file cấu hình được sử dụng để DLL gọi tới về sau)
 
-# Phân tích cdpsgshims.dll
+## Phân tích cdpsgshims.dll
 
 File DLL này là PE file 64 bit, có tên gốc là TSVIPSrv.dll. Export một số function, đáng chú ý là function là OfficeClickToRun
 
