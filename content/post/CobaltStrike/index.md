@@ -1,6 +1,6 @@
 ---
 title: Cobalt Strike
-slug: Malware
+slug: Cobaltstrike
 date: 2022-12-28 00:00:00+0000
 image: CobaltStrike.jpg
 categories:
@@ -97,8 +97,8 @@ mtxstify.scr           EE4B2DA99308C3E7EA81C4E1F80C946E (MD5)
 
 > C2:
 
-didongbuy[.]com
+didongbuy.com
 
-news[.]worldstockhub[.]com
+news.worldstockhub.com
 
 18.138.81.223

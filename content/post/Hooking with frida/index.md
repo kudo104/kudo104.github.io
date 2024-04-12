@@ -1,6 +1,6 @@
 ---
 title: Hooking Windows API with frida
-slug: Research
+slug: frida
 date: 2023-04-03 00:00:00+0000
 image: cover.png
 categories:
