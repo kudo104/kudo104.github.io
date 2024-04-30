@@ -1,7 +1,7 @@
 ---
 title: How to debug kernel in windows
 slug: debugkernel
-date: 2023-4-11 00:00:00+0000
+date: 2023-04-11 00:00:00+0000
 image: images.jpg
 categories:
     - Study
@@ -13,7 +13,7 @@ tags:
 Để debug kernel chúng ta cần 1 máy ảo và 1 máy host để debug
 
 Máy host để debug cần cài Windbg để thực hiện debug
-## 1. Máy ảo - 192.168.1.6
+## Máy ảo - 192.168.1.6
 Máy ảo mình sử dụng Windows 10 
 
 Việc đầu tiên chúng ta cần làm trên máy ảo để debug là tắt năng check signature của windows để load kernel
@@ -37,7 +37,7 @@ Tiếp theo thực hiện câu lệnh sau để lưu thông tin như `key`, `hos
 
 ![Picture 3](3.png)
 
-## 2. Máy host
+## Máy host
 
 Sử dụng `key`, `port` đã lưu ở trên nhập các thông tin trong windbg
 
