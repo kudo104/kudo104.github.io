@@ -64,4 +64,12 @@ Net:port=<….>,key=<….>
 
 ![Picture 8](8.png)
 
-Bây giờ chúng ta chạy và debug thôi ^.^
+Bây giờ chúng ta chạy và debug thôi ^.^. Đi pha tách coffe ngồi đợi thôi. Nếu mà có hình `Refreshing module list` thì debug thành công đợi nó tải hoàn tất các symbol.
+
+![Picture 9](9.png)
+
+Debug thành công
+
+![Picture 10](10.png)
+
+Lưu ý: Nếu không hiển thị `Refreshing module list` từ câu lệnh này`bcdedit /dbgsettings net hostip:ip_vmware port:port_des` ta đổi thành `.\kdnet.exe ip_host port_des` file `kdnet.exe` tại dường dẫn `C:\Program Files (x86)\Windows Kits\10\Debuggers\x64`.
