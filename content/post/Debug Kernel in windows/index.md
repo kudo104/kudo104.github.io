@@ -72,4 +72,4 @@ Debug thành công
 
 ![Picture 10](10.png)
 
-Lưu ý: Nếu không hiển thị `Refreshing module list` từ câu lệnh này`bcdedit /dbgsettings net hostip:ip_vmware port:port_des` ta đổi thành `.\kdnet.exe ip_host port_des` file `kdnet.exe` tại dường dẫn `C:\Program Files (x86)\Windows Kits\10\Debuggers\x64`.
+Lưu ý: Nếu không hiển thị `Refreshing module list` thì từ câu lệnh này`bcdedit /dbgsettings net hostip:ip_vmware port:port_des` ta đổi thành `.\kdnet.exe ip_host port_des` file `kdnet.exe` tại dường dẫn `C:\Program Files (x86)\Windows Kits\10\Debuggers\x64` trên máy machine.
