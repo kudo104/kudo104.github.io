@@ -27,6 +27,7 @@ Mình sử dụng .NETReactorSlayer để unpack các bạn có thể thấy s�
 Mã độc thực hiện lấy `username` `password` tại `owa/auth.owa` khi thực hiện đăng nhập trên Mail exchange. Credential được lưu ở `C:\windows\temp\~ex.dat`, `xor 183` và sau đó sẽ thực hiện lưu dưới dạng base64
 
 ![Picture 3](3.png)
+
 ![Picture 4](4.png)
 
 File ~ex.dat của mã độc lưu các thông tin như sau:

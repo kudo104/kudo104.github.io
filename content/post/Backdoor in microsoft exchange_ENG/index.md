@@ -27,6 +27,7 @@ I used .NETReactorSlayer to unpack, and you can see the difference before and af
 The malware captures the `username` and `password` at `owa/auth` when login on Mail Exchange. The credentials are stored in C:\windows\temp\~ex.dat, XORed with 183, and then saved in base64 format.
 
 ![Picture 3](3.png)
+
 ![Picture 4](4.png)
 
 ~ex.dat file of the malware stores the following information:
