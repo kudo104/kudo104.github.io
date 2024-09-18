@@ -1,7 +1,7 @@
 ---
 title: Owa Bakcdoor on Microsoft Exchange
 slug: OwaBackdoor_ENG
-date: 2024-6-11 00:00:00+0000
+date: 2024-06-11 00:00:00+0000
 image: image.png
 categories:
     - Malware
