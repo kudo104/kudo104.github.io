@@ -9,28 +9,28 @@ tags:
     - Study
 ---
 
-# KENREL DEBUG
-Để debug kernel chúng ta cần 1 máy ảo và 1 máy host để debug
+Để debug kernel chúng ta cần 1 máy ảo và 1 máy host để debug. Máy host để debug cần cài Windbg để thực hiện debug
 
-Máy host để debug cần cài Windbg để thực hiện debug
 ## Máy ảo - 192.168.1.6
+
 Máy ảo mình sử dụng Windows 10 
 
 Việc đầu tiên chúng ta cần làm trên máy ảo để debug là tắt năng check signature của windows để load kernel
 
-```
-bcdedit /set nointegritychecks on
-bcdedit /set testsigning on
-```
+`bcdedit /set nointegritychecks on`
+
+`bcdedit /set testsigning on`
+
 ![Picture 1](1.png)
 
 Tiếp theo thực hiện các câu lệnh sau để enbale debug. Windbg hổ trợ nhiều loại debug khác nhau như `Net`, `COM`,.. Ở đây mình setup debug thông qua `Net`
 
-```
-bcdedit /debug on
-bcdedit /dbgsettings net hostip:ip_vmware port:port_des
-bcdedit /set testsigning on
-```
+`bcdedit /debug on`
+
+`bcdedit /dbgsettings net hostip:ip_vmware port:port_des`
+
+`bcdedit /set testsigning on`
+
 ![Picture 2](2.png)
 
 Tiếp theo thực hiện câu lệnh sau để lưu thông tin như `key`, `hostip`, `port` để debug

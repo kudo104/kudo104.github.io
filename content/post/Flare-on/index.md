@@ -9,16 +9,16 @@ tags:
     - CTF
 ---
 
-Lời đầu tiên mình muốn nói đó là cảm ơn mấy ông anh trong clb đã giúp đỡ mình rất nhiều để mình clear Flare-on 2022 sau nhiều ngày.
+Lời đầu tiên mình muốn nói đó là cảm ơn mấy anh em trong `KCSC` đã giúp đỡ mình rất nhiều để mình clear Flare-on 2022 sau nhiều ngày.
 
 ![Picture 1](flare-on.png)
 
-## 1.Tổng Quan 
+## Tổng Quan 
 Đầu tiên mình ném vào `Detect it easy` để có các thông tin cơ bản, chương trình dùng pyinstaller để đóng gói.
 
 ![Picture 2](1.png)
 
-## 2. Unpack và Phân tích
+## Unpack & Analysis
 Sử dụng tool có sẵn `PyInstaller Extractor` để unpack,file cần reverse 11.pyc
 
 ![Picture 3](2.png)
@@ -46,7 +46,5 @@ class ARC4:
     print(b)
 ```
 
-## 3. Flag
-
-```Pyth0n_Prot3ction_tuRn3d_Up_t0_11@flare-on.com```
+Flag `Pyth0n_Prot3ction_tuRn3d_Up_t0_11@flare-on.com`
 

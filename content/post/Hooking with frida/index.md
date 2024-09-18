@@ -98,9 +98,7 @@ Hook is successful, and now we know the flow of the program and how it works.
 
 ![Find imagebase](5.png)
 
-# Flag
-
-```LINECTF{e255cda25f1a8a634b31458d2ec405b6}```
+> Flag `LINECTF{e255cda25f1a8a634b31458d2ec405b6}`
 
 ## Resources
 https://www.ired.team/miscellaneous-reversing-forensics/windows-kernel-internals/instrumenting-windows-apis-with-frida

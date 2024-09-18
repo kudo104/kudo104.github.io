@@ -59,7 +59,7 @@ Load file dump.dll vào IDA để phân tích, sau khi giải mã RC4 ở trên 
 
 Một chỗ cần lưu ý trong hàm này là nó đọc giá trị NumberOfSybols từ File Header và lưu vào biến key sau đó biến này được sử dụng trong hàm DecryptString.Hàm này có chức năng giải mã các string bảng import table hay là tên các section.
 
-![Picture 10](10.png)(11.png)
+![Picture 10](10.png)
 
 * Hàm export function v3.28 này có nhiệm vụ:
 * Tìm data PE file trong dll để load vào vùng nhớ process
@@ -77,7 +77,7 @@ Kết quả sau quá trình khôi phục như sau:
 
 ![Picture 14](14.png)
 
-# Indicators of Compromises (IOCs)
+## Indicators of Compromises (IOCs)
 
 > File name:
 
