@@ -1,6 +1,6 @@
 ---
 title: Owa Bakcdoor trong Microsoft Exchange
-slug: OwaBackdoor
+slug: OwaBackdoorVN
 date: 2024-6-11 00:00:00+0000
 image: image.png
 categories:
@@ -23,7 +23,7 @@ Mình sử dụng .NETReactorSlayer để unpack các bạn có thể thấy s�
 
 ## Phân tích 
 
-### Credentials
+### stolen
 Mã độc thực hiện lấy `username` `password` tại `owa/auth.owa` khi thực hiện đăng nhập trên Mail exchange. Credential được lưu ở `C:\windows\temp\~ex.dat`, `xor 183` và sau đó sẽ thực hiện lưu dưới dạng base64
 
 ![Picture 3](3.png)
@@ -38,7 +38,7 @@ File ~ex.dat của mã độc lưu các thông tin như sau:
 9/6/2024 3:39:01 PM	192.168.204.166	username pasword	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36	302
 ```
 
-### Connect
+### Kết nối
 
 Kẻ tấn công sử dụng trường sessionid dùng để connect đến server có thể thực thi command, download bất kì
 
