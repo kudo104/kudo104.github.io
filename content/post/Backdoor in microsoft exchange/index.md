@@ -1,7 +1,7 @@
 ---
-title: Owa Bakcdoor in Microsoft exchange
+title: Owa Bakcdoor trong Microsoft Exchange
 slug: OwaBackdoor
-date: 2024-4-10 00:00:00+0000
+date: 2024-6-11 00:00:00+0000
 image: image.png
 categories:
     - Malware
@@ -35,7 +35,7 @@ File ~ex.dat của mã độc lưu các thông tin như sau:
 - Username và Password khi login
 
 ```
-9/4/2024 3:39:01 PM	192.168.204.166	username pasword	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36	302
+9/6/2024 3:39:01 PM	192.168.204.166	username pasword	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36	302
 ```
 
 ### Connect
