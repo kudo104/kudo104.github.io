@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>ENG on Kudo104</title><link>https://kudo104.github.io/tags/eng/</link><description>Recent content in ENG on Kudo104</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 11 Jun 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://kudo104.github.io/tags/eng/index.xml" rel="self" type="application/rss+xml"/><item><title>Owa Bakcdoor on Microsoft Exchange</title><link>https://kudo104.github.io/p/owabackdoor_eng/</link><pubDate>Tue, 11 Jun 2024 00:00:00 +0000</pubDate><guid>https://kudo104.github.io/p/owabackdoor_eng/</guid><description>&lt;img src="https://kudo104.github.io/p/owabackdoor_eng/image.png" alt="Featured image of post Owa Bakcdoor on Microsoft Exchange" />&lt;h2 id="overview">Overview
+&lt;/h2>&lt;p>We can see that this is a C# file, using .NET Reactor for obfuscation to avoid analysis and detection by antivirus software.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/owabackdoor_eng/1.png"
+width="772"
+height="540"
+srcset="https://kudo104.github.io/p/owabackdoor_eng/1_hu5392685959923605402.png 480w, https://kudo104.github.io/p/owabackdoor_eng/1_hu3501558196248378845.png 1024w"
+loading="lazy"
+alt="Picture 1"
+class="gallery-image"
+data-flex-grow="142"
+data-flex-basis="343px"
+>&lt;/p>
+&lt;h2 id="unpack">Unpack
+&lt;/h2>&lt;p>I used .NETReactorSlayer to unpack, and you can see the difference before and after unpacking.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/owabackdoor_eng/2.png"
+width="1264"
+height="448"
+srcset="https://kudo104.github.io/p/owabackdoor_eng/2_hu11669915535001047857.png 480w, https://kudo104.github.io/p/owabackdoor_eng/2_hu5447770664351723225.png 1024w"
+loading="lazy"
+alt="Picture 2"
+class="gallery-image"
+data-flex-grow="282"
+data-flex-basis="677px"
+>&lt;/p>
+&lt;h2 id="analysis">Analysis
+&lt;/h2>&lt;h3 id="stolen">Stolen
+&lt;/h3>&lt;p>The malware captures the &lt;code>username&lt;/code> and &lt;code>password&lt;/code> at &lt;code>owa/auth&lt;/code> when login on Mail Exchange. The credentials are stored in C:\windows\temp~ex.dat, XORed with 183, and then saved in base64 format.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/owabackdoor_eng/3.png"
+width="1598"
+height="994"
+srcset="https://kudo104.github.io/p/owabackdoor_eng/3_hu325131048475010041.png 480w, https://kudo104.github.io/p/owabackdoor_eng/3_hu10702840989169147679.png 1024w"
+loading="lazy"
+alt="Picture 3"
+class="gallery-image"
+data-flex-grow="160"
+data-flex-basis="385px"
+>&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/owabackdoor_eng/4.png"
+width="1618"
+height="698"
+srcset="https://kudo104.github.io/p/owabackdoor_eng/4_hu13543792504166045085.png 480w, https://kudo104.github.io/p/owabackdoor_eng/4_hu4318769882848337094.png 1024w"
+loading="lazy"
+alt="Picture 4"
+class="gallery-image"
+data-flex-grow="231"
+data-flex-basis="556px"
+>&lt;/p>
+&lt;p>~ex.dat file of the malware stores the following information:&lt;/p>
+&lt;ul>
+&lt;li>Timestamp&lt;/li>
+&lt;li>Remote IP address&lt;/li>
+&lt;li>Username and Password upon login&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">9/6/2024 3:39:01 PM 192.168.204.166 username pasword Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 302
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="connect">Connect
+&lt;/h3>&lt;p>Attacker uses a special sessionid field to connect to the server, allowing them to execute commands and download anything.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/owabackdoor_eng/6.png"
+width="1078"
+height="398"
+srcset="https://kudo104.github.io/p/owabackdoor_eng/6_hu1140961995089783127.png 480w, https://kudo104.github.io/p/owabackdoor_eng/6_hu6359649243973605639.png 1024w"
+loading="lazy"
+alt="Picture 5"
+class="gallery-image"
+data-flex-grow="270"
+data-flex-basis="650px"
+>&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/owabackdoor_eng/5.png"
+width="1276"
+height="1222"
+srcset="https://kudo104.github.io/p/owabackdoor_eng/5_hu3278808828912518878.png 480w, https://kudo104.github.io/p/owabackdoor_eng/5_hu15651945054711259704.png 1024w"
+loading="lazy"
+alt="Picture 6"
+class="gallery-image"
+data-flex-grow="104"
+data-flex-basis="250px"
+>&lt;/p>
+&lt;h2 id="iocs">IOCs
+&lt;/h2>&lt;blockquote>
+&lt;p>MD5: &lt;code>A13E534F18967AF816FBE0EF83CC2AB8&lt;/code>&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>File: &lt;code>~ex.dat&lt;/code>&lt;/p>
+&lt;/blockquote></description></item><item><title>Hooking Windows API with frida</title><link>https://kudo104.github.io/p/frida/</link><pubDate>Mon, 03 Apr 2023 00:00:00 +0000</pubDate><guid>https://kudo104.github.io/p/frida/</guid><description>&lt;img src="https://kudo104.github.io/p/frida/cover.png" alt="Featured image of post Hooking Windows API with frida" />&lt;h2 id="frida">Frida
+&lt;/h2>&lt;p>Frida is a dynamic instrumentation tool that allows developers and security researchers to inject JavaScript into running processes on mobile and desktop platforms.&lt;/p>
+&lt;h2 id="hooking-a-funtion-at-va">Hooking a funtion at VA
+&lt;/h2>&lt;p>when you read this article,i suggest that you should consider reading this article first &lt;a class="link" href="https://frida.re/docs/functions/" target="_blank" rel="noopener"
+>here&lt;/a>.&lt;/p>
+&lt;p>In the program,there are many funtions we want to hook.How we can find addresses to hook.&lt;/p>
+&lt;p>You can based on offset after decompile to hooking funtions not defined in GCC,MSVC,..&lt;/p>
+&lt;p>Example from Line CTF 2023 finish.exe. I want to hook the list of functions below to trace the flow of the program.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/frida/1.png"
+width="556"
+height="234"
+srcset="https://kudo104.github.io/p/frida/1_hu8251378586621957322.png 480w, https://kudo104.github.io/p/frida/1_hu12895666009935102689.png 1024w"
+loading="lazy"
+alt="List of funtion"
+class="gallery-image"
+data-flex-grow="237"
+data-flex-basis="570px"
+>&lt;/p>
+&lt;p>You can see table of funtions in IDA.Colum start is the address of function such as 140001DDB,140001AE6,&amp;hellip;&lt;/p>
+&lt;p>My script frida hook.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">import&lt;/span> &lt;span class="n">frida&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">import&lt;/span> &lt;span class="n">sys&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">session&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">frida&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">attach&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;fishing.exe&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">script&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">session&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">create_script&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;&amp;#34;&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">Interceptor.attach(ptr(&amp;#34;0x7ff67a022310&amp;#34;), {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> onEnter(args) {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> console.log(&amp;#34;cal rc4&amp;#34; + args[0].toInt32());
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">});
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">Interceptor.attach(ptr(&amp;#34;0x7ff67a0217D0&amp;#34;), {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> onEnter(args) {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> console.log(&amp;#34;call Handle :&amp;#34; + args[0].toInt32());
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">});
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">Interceptor.attach(ptr(&amp;#34;0x7ff67a021CDF&amp;#34;), {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> onEnter(args) {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> console.log(&amp;#34;call xor 21 :&amp;#34; + args[0].toInt32());
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">});
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">Interceptor.attach(ptr(&amp;#34;0x7ff67a021D33&amp;#34;), {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> onEnter(args) {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> console.log(&amp;#34;call sub 34 :&amp;#34; + args[0].toInt32());
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">});
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">Interceptor.attach(ptr(&amp;#34;0x7ff67a021D87&amp;#34;), {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> onEnter(args) {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> console.log(&amp;#34;call xor 11 :&amp;#34; + args[0].toInt32());
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">});
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">Interceptor.attach(ptr(&amp;#34;0x7ff67a021DDB&amp;#34;), {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> onEnter(args) {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> console.log(&amp;#34;call add 18 :&amp;#34; + args[0].toInt32());
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">});
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">&amp;#34;&amp;#34;&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">on_message&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">message&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">message&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">script&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">on&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;message&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">on_message&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">script&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">load&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">sys&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">stdin&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">read&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>when program loading into process.Windows Loader relies on the PE file structure to load it into the memory.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/frida/2.png"
+width="796"
+height="822"
+srcset="https://kudo104.github.io/p/frida/2_hu5850714154866191286.png 480w, https://kudo104.github.io/p/frida/2_hu2190204044814088345.png 1024w"
+loading="lazy"
+alt="PE FILE"
+class="gallery-image"
+data-flex-grow="96"
+data-flex-basis="232px"
+>&lt;/p>
+&lt;p>Window Load will mapped relies on ImagBase of Nt HEARDER sometimes that memory is used windows loader will choose another imagebase to load the program into the memory process&lt;/p>
+&lt;p>You can use Process Explorer to see where the program is loaded into memory to fine-tune the position of the functions you want to hook.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/frida/4.png"
+width="431"
+height="332"
+srcset="https://kudo104.github.io/p/frida/4_hu16815478988215423016.png 480w, https://kudo104.github.io/p/frida/4_hu15948773748595359522.png 1024w"
+loading="lazy"
+alt="my image"
+class="gallery-image"
+data-flex-grow="129"
+data-flex-basis="311px"
+>&lt;/p>
+&lt;p>You can see that the &amp;lsquo;LoadAddress&amp;rsquo; is 0x7ff6a4b10000, which we need to know in order to fix the script.&lt;/p>
+&lt;p>Hook is successful, and now we know the flow of the program and how it works.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/frida/5.png"
+width="489"
+height="238"
+srcset="https://kudo104.github.io/p/frida/5_hu10894700701205762059.png 480w, https://kudo104.github.io/p/frida/5_hu16927918779714512720.png 1024w"
+loading="lazy"
+alt="Find imagebase"
+class="gallery-image"
+data-flex-grow="205"
+data-flex-basis="493px"
+>&lt;/p>
+&lt;blockquote>
+&lt;p>Flag &lt;code>LINECTF{e255cda25f1a8a634b31458d2ec405b6}&lt;/code>&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="resources">Resources
+&lt;/h2>&lt;p>&lt;a class="link" href="https://www.ired.team/miscellaneous-reversing-forensics/windows-kernel-internals/instrumenting-windows-apis-with-frida" target="_blank" rel="noopener"
+>https://www.ired.team/miscellaneous-reversing-forensics/windows-kernel-internals/instrumenting-windows-apis-with-frida&lt;/a>&lt;/p>
+&lt;p>&lt;a class="link" href="https://fuzzysecurity.com/tutorials/29.html" target="_blank" rel="noopener"
+>https://fuzzysecurity.com/tutorials/29.html&lt;/a>&lt;/p>
+&lt;p>&lt;a class="link" href="https://frida.re/docs/functions/" target="_blank" rel="noopener"
+>https://frida.re/docs/functions/&lt;/a>&lt;/p></description></item></channel></rss>
