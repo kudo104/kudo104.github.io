@@ -19,9 +19,7 @@ Việc đầu tiên chúng ta cần làm trên máy ảo để debug là tắt n
 
 ```
 bcdedit /set nointegritychecks on
-```
 
-```
 bcdedit /set testsigning on
 ```
 
@@ -31,13 +29,7 @@ Tiếp theo thực hiện các câu lệnh sau để enbale debug. Windbg hổ t
 
 ```
 bcdedit /debug on
-```
-
-```
 bcdedit /dbgsettings net hostip:ip_vmware port:port_des
-```
-
-```
 bcdedit /set testsigning on
 ```
 
