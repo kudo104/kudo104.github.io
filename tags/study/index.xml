@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Study on Kudo104</title><link>https://kudo104.github.io/tags/study/</link><description>Recent content in Study on Kudo104</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 11 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://kudo104.github.io/tags/study/index.xml" rel="self" type="application/rss+xml"/><item><title>How to debug kernel in windows</title><link>https://kudo104.github.io/p/debugkernel/</link><pubDate>Tue, 11 Apr 2023 00:00:00 +0000</pubDate><guid>https://kudo104.github.io/p/debugkernel/</guid><description>&lt;img src="https://kudo104.github.io/p/debugkernel/images.jpg" alt="Featured image of post How to debug kernel in windows" />&lt;p>Để debug kernel chúng ta cần 1 máy ảo và 1 máy host để debug. Máy host để debug cần cài Windbg để thực hiện debug&lt;/p>
+&lt;h2 id="máy-ảo---19216816">Máy ảo - 192.168.1.6
+&lt;/h2>&lt;p>Máy ảo mình sử dụng Windows 10&lt;/p>
+&lt;p>Việc đầu tiên chúng ta cần làm trên máy ảo để debug là tắt năng check signature của windows để load kernel&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">bcdedit /set nointegritychecks on
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">bcdedit /set testsigning on
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://kudo104.github.io/p/debugkernel/1.png"
+width="507"
+height="116"
+srcset="https://kudo104.github.io/p/debugkernel/1_hu8810710082335722049.png 480w, https://kudo104.github.io/p/debugkernel/1_hu3331578097125178293.png 1024w"
+loading="lazy"
+alt="Picture 1"
+class="gallery-image"
+data-flex-grow="437"
+data-flex-basis="1048px"
+>&lt;/p>
+&lt;p>Tiếp theo thực hiện các câu lệnh sau để enbale debug. Windbg hổ trợ nhiều loại debug khác nhau như &lt;code>Net&lt;/code>, &lt;code>COM&lt;/code>,.. Ở đây mình setup debug thông qua &lt;code>Net&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">bcdedit /debug on
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">bcdedit /dbgsettings net hostip:ip_vmware port:port_des
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">bcdedit /set testsigning on
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://kudo104.github.io/p/debugkernel/2.png"
+width="629"
+height="154"
+srcset="https://kudo104.github.io/p/debugkernel/2_hu1678108984634366019.png 480w, https://kudo104.github.io/p/debugkernel/2_hu14406532431779892931.png 1024w"
+loading="lazy"
+alt="Picture 2"
+class="gallery-image"
+data-flex-grow="408"
+data-flex-basis="980px"
+>&lt;/p>
+&lt;p>Tiếp theo thực hiện câu lệnh sau để lưu thông tin như &lt;code>key&lt;/code>, &lt;code>hostip&lt;/code>, &lt;code>port&lt;/code> để debug&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/debugkernel/3.png"
+width="628"
+height="121"
+srcset="https://kudo104.github.io/p/debugkernel/3_hu1520717102045498219.png 480w, https://kudo104.github.io/p/debugkernel/3_hu17640262808446501498.png 1024w"
+loading="lazy"
+alt="Picture 3"
+class="gallery-image"
+data-flex-grow="519"
+data-flex-basis="1245px"
+>&lt;/p>
+&lt;h2 id="máy-host">Máy host
+&lt;/h2>&lt;p>Sử dụng &lt;code>key&lt;/code>, &lt;code>port&lt;/code> đã lưu ở trên nhập các thông tin trong windbg&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/debugkernel/4.png"
+width="624"
+height="187"
+srcset="https://kudo104.github.io/p/debugkernel/4_hu12492624942947391760.png 480w, https://kudo104.github.io/p/debugkernel/4_hu359814509262133585.png 1024w"
+loading="lazy"
+alt="Picture 4"
+class="gallery-image"
+data-flex-grow="333"
+data-flex-basis="800px"
+>&lt;/p>
+&lt;p>Load debug thành công&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/debugkernel/5.png"
+width="624"
+height="199"
+srcset="https://kudo104.github.io/p/debugkernel/5_hu14096770365772597995.png 480w, https://kudo104.github.io/p/debugkernel/5_hu1908377781867741621.png 1024w"
+loading="lazy"
+alt="Picture 5"
+class="gallery-image"
+data-flex-grow="313"
+data-flex-basis="752px"
+>&lt;/p>
+&lt;p>Sau khi load debug thành công trên windbg tiếp tục settup trên IDA&lt;/p>
+&lt;p>Chọn Windbg debuger:&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/debugkernel/6.png"
+width="624"
+height="231"
+srcset="https://kudo104.github.io/p/debugkernel/6_hu5198807732509122124.png 480w, https://kudo104.github.io/p/debugkernel/6_hu5070588528947520522.png 1024w"
+loading="lazy"
+alt="Picture 6"
+class="gallery-image"
+data-flex-grow="270"
+data-flex-basis="648px"
+>&lt;/p>
+&lt;p>Trên thanh menu Debugger-&amp;gt;Debug option-&amp;gt; Set specific option -&amp;gt; chọn kernel mode debugging&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/debugkernel/7.png"
+width="624"
+height="421"
+srcset="https://kudo104.github.io/p/debugkernel/7_hu4214044106832608323.png 480w, https://kudo104.github.io/p/debugkernel/7_hu13285947896707673433.png 1024w"
+loading="lazy"
+alt="Picture 7"
+class="gallery-image"
+data-flex-grow="148"
+data-flex-basis="355px"
+>&lt;/p>
+&lt;p>Chọn Debugger-&amp;gt;Process option tại Connection string điền theo format sau:
+Net:port=&amp;lt;….&amp;gt;,key=&amp;lt;….&amp;gt;&lt;/p>
+&lt;p>&lt;code>net:port=53000,key=3iexu1qpvssyt.1y5lv21youkjd.l10jice73w0c.3jsz76o1ni538 -&amp;gt; OK&lt;/code>&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/debugkernel/8.png"
+width="517"
+height="268"
+srcset="https://kudo104.github.io/p/debugkernel/8_hu14125516087463586533.png 480w, https://kudo104.github.io/p/debugkernel/8_hu6826885686537383161.png 1024w"
+loading="lazy"
+alt="Picture 8"
+class="gallery-image"
+data-flex-grow="192"
+data-flex-basis="462px"
+>&lt;/p>
+&lt;p>Bây giờ chúng ta chạy và debug thôi ^.^. Đi pha tách coffe ngồi đợi thôi. Nếu mà có hình &lt;code>Refreshing module list&lt;/code> thì debug thành công đợi nó tải hoàn tất các symbol.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/debugkernel/9.png"
+width="608"
+height="296"
+srcset="https://kudo104.github.io/p/debugkernel/9_hu13224277640820605667.png 480w, https://kudo104.github.io/p/debugkernel/9_hu8819748605293294153.png 1024w"
+loading="lazy"
+alt="Picture 9"
+class="gallery-image"
+data-flex-grow="205"
+data-flex-basis="492px"
+>&lt;/p>
+&lt;p>Debug thành công&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/debugkernel/10.png"
+width="2374"
+height="716"
+srcset="https://kudo104.github.io/p/debugkernel/10_hu7629175378513665692.png 480w, https://kudo104.github.io/p/debugkernel/10_hu11929720534548773573.png 1024w"
+loading="lazy"
+alt="Picture 10"
+class="gallery-image"
+data-flex-grow="331"
+data-flex-basis="795px"
+>&lt;/p>
+&lt;p>Lưu ý: Nếu không hiển thị &lt;code>Refreshing module list&lt;/code> thì từ câu lệnh này&lt;code>bcdedit /dbgsettings net hostip:ip_vmware port:port_des&lt;/code> ta đổi thành &lt;code>.\kdnet.exe ip_host port_des&lt;/code> file &lt;code>kdnet.exe&lt;/code> tại dường dẫn &lt;code>C:\Program Files (x86)\Windows Kits\10\Debuggers\x64&lt;/code> trên máy machine.&lt;/p></description></item><item><title>Hooking Windows API with frida</title><link>https://kudo104.github.io/p/frida/</link><pubDate>Mon, 03 Apr 2023 00:00:00 +0000</pubDate><guid>https://kudo104.github.io/p/frida/</guid><description>&lt;img src="https://kudo104.github.io/p/frida/cover.png" alt="Featured image of post Hooking Windows API with frida" />&lt;h2 id="frida">Frida
+&lt;/h2>&lt;p>Frida is a dynamic instrumentation tool that allows developers and security researchers to inject JavaScript into running processes on mobile and desktop platforms.&lt;/p>
+&lt;h2 id="hooking-a-funtion-at-va">Hooking a funtion at VA
+&lt;/h2>&lt;p>when you read this article,i suggest that you should consider reading this article first &lt;a class="link" href="https://frida.re/docs/functions/" target="_blank" rel="noopener"
+>here&lt;/a>.&lt;/p>
+&lt;p>In the program,there are many funtions we want to hook.How we can find addresses to hook.&lt;/p>
+&lt;p>You can based on offset after decompile to hooking funtions not defined in GCC,MSVC,..&lt;/p>
+&lt;p>Example from Line CTF 2023 finish.exe. I want to hook the list of functions below to trace the flow of the program.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/frida/1.png"
+width="556"
+height="234"
+srcset="https://kudo104.github.io/p/frida/1_hu8251378586621957322.png 480w, https://kudo104.github.io/p/frida/1_hu12895666009935102689.png 1024w"
+loading="lazy"
+alt="List of funtion"
+class="gallery-image"
+data-flex-grow="237"
+data-flex-basis="570px"
+>&lt;/p>
+&lt;p>You can see table of funtions in IDA.Colum start is the address of function such as 140001DDB,140001AE6,&amp;hellip;&lt;/p>
+&lt;p>My script frida hook.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-gdscript3" data-lang="gdscript3">&lt;span class="line">&lt;span class="cl">&lt;span class="n">import&lt;/span> &lt;span class="n">frida&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">import&lt;/span> &lt;span class="n">sys&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">session&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">frida&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">attach&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;fishing.exe&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">script&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">session&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">create_script&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;&amp;#34;&amp;#34;
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">Interceptor.attach(ptr(&amp;#34;0x7ff67a022310&amp;#34;), {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> onEnter(args) {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> console.log(&amp;#34;cal rc4&amp;#34; + args[0].toInt32());
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">});
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">Interceptor.attach(ptr(&amp;#34;0x7ff67a0217D0&amp;#34;), {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> onEnter(args) {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> console.log(&amp;#34;call Handle :&amp;#34; + args[0].toInt32());
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">});
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">Interceptor.attach(ptr(&amp;#34;0x7ff67a021CDF&amp;#34;), {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> onEnter(args) {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> console.log(&amp;#34;call xor 21 :&amp;#34; + args[0].toInt32());
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">});
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">Interceptor.attach(ptr(&amp;#34;0x7ff67a021D33&amp;#34;), {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> onEnter(args) {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> console.log(&amp;#34;call sub 34 :&amp;#34; + args[0].toInt32());
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">});
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">Interceptor.attach(ptr(&amp;#34;0x7ff67a021D87&amp;#34;), {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> onEnter(args) {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> console.log(&amp;#34;call xor 11 :&amp;#34; + args[0].toInt32());
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">});
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">Interceptor.attach(ptr(&amp;#34;0x7ff67a021DDB&amp;#34;), {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> onEnter(args) {
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> console.log(&amp;#34;call add 18 :&amp;#34; + args[0].toInt32());
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2"> }
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">});
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="s2">&amp;#34;&amp;#34;&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">on_message&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">message&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">message&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">script&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">on&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;message&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">on_message&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">script&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">load&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">sys&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">stdin&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">read&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>when program loading into process.Windows Loader relies on the PE file structure to load it into the memory.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/frida/2.png"
+width="796"
+height="822"
+srcset="https://kudo104.github.io/p/frida/2_hu5850714154866191286.png 480w, https://kudo104.github.io/p/frida/2_hu2190204044814088345.png 1024w"
+loading="lazy"
+alt="PE FILE"
+class="gallery-image"
+data-flex-grow="96"
+data-flex-basis="232px"
+>&lt;/p>
+&lt;p>Window Load will mapped relies on ImagBase of Nt HEARDER sometimes that memory is used windows loader will choose another imagebase to load the program into the memory process&lt;/p>
+&lt;p>You can use Process Explorer to see where the program is loaded into memory to fine-tune the position of the functions you want to hook.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/frida/4.png"
+width="431"
+height="332"
+srcset="https://kudo104.github.io/p/frida/4_hu16815478988215423016.png 480w, https://kudo104.github.io/p/frida/4_hu15948773748595359522.png 1024w"
+loading="lazy"
+alt="my image"
+class="gallery-image"
+data-flex-grow="129"
+data-flex-basis="311px"
+>&lt;/p>
+&lt;p>You can see that the &amp;lsquo;LoadAddress&amp;rsquo; is 0x7ff6a4b10000, which we need to know in order to fix the script.&lt;/p>
+&lt;p>Hook is successful, and now we know the flow of the program and how it works.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/frida/5.png"
+width="489"
+height="238"
+srcset="https://kudo104.github.io/p/frida/5_hu10894700701205762059.png 480w, https://kudo104.github.io/p/frida/5_hu16927918779714512720.png 1024w"
+loading="lazy"
+alt="Find imagebase"
+class="gallery-image"
+data-flex-grow="205"
+data-flex-basis="493px"
+>&lt;/p>
+&lt;blockquote>
+&lt;p>Flag &lt;code>LINECTF{e255cda25f1a8a634b31458d2ec405b6}&lt;/code>&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="resources">Resources
+&lt;/h2>&lt;p>&lt;a class="link" href="https://www.ired.team/miscellaneous-reversing-forensics/windows-kernel-internals/instrumenting-windows-apis-with-frida" target="_blank" rel="noopener"
+>https://www.ired.team/miscellaneous-reversing-forensics/windows-kernel-internals/instrumenting-windows-apis-with-frida&lt;/a>&lt;/p>
+&lt;p>&lt;a class="link" href="https://fuzzysecurity.com/tutorials/29.html" target="_blank" rel="noopener"
+>https://fuzzysecurity.com/tutorials/29.html&lt;/a>&lt;/p>
+&lt;p>&lt;a class="link" href="https://frida.re/docs/functions/" target="_blank" rel="noopener"
+>https://frida.re/docs/functions/&lt;/a>&lt;/p></description></item></channel></rss>

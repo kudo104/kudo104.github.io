@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>C# on Kudo104</title><link>https://kudo104.github.io/tags/c%23/</link><description>Recent content in C# on Kudo104</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Tue, 11 Jun 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://kudo104.github.io/tags/c%23/index.xml" rel="self" type="application/rss+xml"/><item><title>Owa Bakcdoor on Microsoft Exchange</title><link>https://kudo104.github.io/p/owabackdoor_eng/</link><pubDate>Tue, 11 Jun 2024 00:00:00 +0000</pubDate><guid>https://kudo104.github.io/p/owabackdoor_eng/</guid><description>&lt;img src="https://kudo104.github.io/p/owabackdoor_eng/image.png" alt="Featured image of post Owa Bakcdoor on Microsoft Exchange" />&lt;h2 id="overview">Overview
+&lt;/h2>&lt;p>We can see that this is a C# file, using .NET Reactor for obfuscation to avoid analysis and detection by antivirus software.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/owabackdoor_eng/1.png"
+width="772"
+height="540"
+srcset="https://kudo104.github.io/p/owabackdoor_eng/1_hu5392685959923605402.png 480w, https://kudo104.github.io/p/owabackdoor_eng/1_hu3501558196248378845.png 1024w"
+loading="lazy"
+alt="Picture 1"
+class="gallery-image"
+data-flex-grow="142"
+data-flex-basis="343px"
+>&lt;/p>
+&lt;h2 id="unpack">Unpack
+&lt;/h2>&lt;p>I used .NETReactorSlayer to unpack, and you can see the difference before and after unpacking.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/owabackdoor_eng/2.png"
+width="1264"
+height="448"
+srcset="https://kudo104.github.io/p/owabackdoor_eng/2_hu11669915535001047857.png 480w, https://kudo104.github.io/p/owabackdoor_eng/2_hu5447770664351723225.png 1024w"
+loading="lazy"
+alt="Picture 2"
+class="gallery-image"
+data-flex-grow="282"
+data-flex-basis="677px"
+>&lt;/p>
+&lt;h2 id="analysis">Analysis
+&lt;/h2>&lt;h3 id="stolen">Stolen
+&lt;/h3>&lt;p>The malware captures the &lt;code>username&lt;/code> and &lt;code>password&lt;/code> at &lt;code>owa/auth&lt;/code> when login on Mail Exchange. The credentials are stored in C:\windows\temp~ex.dat, XORed with 183, and then saved in base64 format.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/owabackdoor_eng/3.png"
+width="1598"
+height="994"
+srcset="https://kudo104.github.io/p/owabackdoor_eng/3_hu325131048475010041.png 480w, https://kudo104.github.io/p/owabackdoor_eng/3_hu10702840989169147679.png 1024w"
+loading="lazy"
+alt="Picture 3"
+class="gallery-image"
+data-flex-grow="160"
+data-flex-basis="385px"
+>&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/owabackdoor_eng/4.png"
+width="1618"
+height="698"
+srcset="https://kudo104.github.io/p/owabackdoor_eng/4_hu13543792504166045085.png 480w, https://kudo104.github.io/p/owabackdoor_eng/4_hu4318769882848337094.png 1024w"
+loading="lazy"
+alt="Picture 4"
+class="gallery-image"
+data-flex-grow="231"
+data-flex-basis="556px"
+>&lt;/p>
+&lt;p>~ex.dat file of the malware stores the following information:&lt;/p>
+&lt;ul>
+&lt;li>Timestamp&lt;/li>
+&lt;li>Remote IP address&lt;/li>
+&lt;li>Username and Password upon login&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">9/6/2024 3:39:01 PM 192.168.204.166 username pasword Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 302
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="connect">Connect
+&lt;/h3>&lt;p>Attacker uses a special sessionid field to connect to the server, allowing them to execute commands and download anything.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/owabackdoor_eng/6.png"
+width="1078"
+height="398"
+srcset="https://kudo104.github.io/p/owabackdoor_eng/6_hu1140961995089783127.png 480w, https://kudo104.github.io/p/owabackdoor_eng/6_hu6359649243973605639.png 1024w"
+loading="lazy"
+alt="Picture 5"
+class="gallery-image"
+data-flex-grow="270"
+data-flex-basis="650px"
+>&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/owabackdoor_eng/5.png"
+width="1276"
+height="1222"
+srcset="https://kudo104.github.io/p/owabackdoor_eng/5_hu3278808828912518878.png 480w, https://kudo104.github.io/p/owabackdoor_eng/5_hu15651945054711259704.png 1024w"
+loading="lazy"
+alt="Picture 6"
+class="gallery-image"
+data-flex-grow="104"
+data-flex-basis="250px"
+>&lt;/p>
+&lt;h2 id="iocs">IOCs
+&lt;/h2>&lt;blockquote>
+&lt;p>MD5: &lt;code>A13E534F18967AF816FBE0EF83CC2AB8&lt;/code>&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>File: &lt;code>~ex.dat&lt;/code>&lt;/p>
+&lt;/blockquote></description></item><item><title>Owa Bakcdoor trong Microsoft Exchange</title><link>https://kudo104.github.io/p/owabackdoorvn/</link><pubDate>Tue, 11 Jun 2024 00:00:00 +0000</pubDate><guid>https://kudo104.github.io/p/owabackdoorvn/</guid><description>&lt;img src="https://kudo104.github.io/p/owabackdoorvn/image.png" alt="Featured image of post Owa Bakcdoor trong Microsoft Exchange" />&lt;h2 id="tổng-quan">Tổng quan
+&lt;/h2>&lt;p>Ta có thể nhìn thấy thì đây là một file C#, sử dụng .NET Reactor để obfuscation tránh việc phân tích và phát hiện của AV.&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/owabackdoorvn/1.png"
+width="772"
+height="540"
+srcset="https://kudo104.github.io/p/owabackdoorvn/1_hu5392685959923605402.png 480w, https://kudo104.github.io/p/owabackdoorvn/1_hu3501558196248378845.png 1024w"
+loading="lazy"
+alt="Picture 1"
+class="gallery-image"
+data-flex-grow="142"
+data-flex-basis="343px"
+>&lt;/p>
+&lt;h2 id="unpack">Unpack
+&lt;/h2>&lt;p>Mình sử dụng .NETReactorSlayer để unpack các bạn có thể thấy sự khác biệt trước và sau khi unpack&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/owabackdoorvn/2.png"
+width="1264"
+height="448"
+srcset="https://kudo104.github.io/p/owabackdoorvn/2_hu11669915535001047857.png 480w, https://kudo104.github.io/p/owabackdoorvn/2_hu5447770664351723225.png 1024w"
+loading="lazy"
+alt="Picture 2"
+class="gallery-image"
+data-flex-grow="282"
+data-flex-basis="677px"
+>&lt;/p>
+&lt;h2 id="phân-tích">Phân tích
+&lt;/h2>&lt;h3 id="stolen">stolen
+&lt;/h3>&lt;p>Mã độc thực hiện lấy &lt;code>username&lt;/code> &lt;code>password&lt;/code> tại &lt;code>owa/auth.owa&lt;/code> khi thực hiện đăng nhập trên Mail exchange. Credential được lưu ở &lt;code>C:\windows\temp\~ex.dat&lt;/code>, &lt;code>xor 183&lt;/code> và sau đó sẽ thực hiện lưu dưới dạng base64&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/owabackdoorvn/3.png"
+width="1598"
+height="994"
+srcset="https://kudo104.github.io/p/owabackdoorvn/3_hu325131048475010041.png 480w, https://kudo104.github.io/p/owabackdoorvn/3_hu10702840989169147679.png 1024w"
+loading="lazy"
+alt="Picture 3"
+class="gallery-image"
+data-flex-grow="160"
+data-flex-basis="385px"
+>&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/owabackdoorvn/4.png"
+width="1618"
+height="698"
+srcset="https://kudo104.github.io/p/owabackdoorvn/4_hu13543792504166045085.png 480w, https://kudo104.github.io/p/owabackdoorvn/4_hu4318769882848337094.png 1024w"
+loading="lazy"
+alt="Picture 4"
+class="gallery-image"
+data-flex-grow="231"
+data-flex-basis="556px"
+>&lt;/p>
+&lt;p>File ~ex.dat của mã độc lưu các thông tin như sau:&lt;/p>
+&lt;ul>
+&lt;li>Thời gian&lt;/li>
+&lt;li>Remote ip address&lt;/li>
+&lt;li>Username và Password khi login&lt;/li>
+&lt;/ul>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">9/6/2024 3:39:01 PM 192.168.204.166 username pasword Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 302
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="kết-nối">Kết nối
+&lt;/h3>&lt;p>Kẻ tấn công sử dụng trường sessionid dùng để connect đến server có thể thực thi command, download bất kì&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/owabackdoorvn/6.png"
+width="1078"
+height="398"
+srcset="https://kudo104.github.io/p/owabackdoorvn/6_hu1140961995089783127.png 480w, https://kudo104.github.io/p/owabackdoorvn/6_hu6359649243973605639.png 1024w"
+loading="lazy"
+alt="Picture 5"
+class="gallery-image"
+data-flex-grow="270"
+data-flex-basis="650px"
+>&lt;/p>
+&lt;p>&lt;img src="https://kudo104.github.io/p/owabackdoorvn/5.png"
+width="1276"
+height="1222"
+srcset="https://kudo104.github.io/p/owabackdoorvn/5_hu3278808828912518878.png 480w, https://kudo104.github.io/p/owabackdoorvn/5_hu15651945054711259704.png 1024w"
+loading="lazy"
+alt="Picture 6"
+class="gallery-image"
+data-flex-grow="104"
+data-flex-basis="250px"
+>&lt;/p>
+&lt;h2 id="iocs">IOCs
+&lt;/h2>&lt;blockquote>
+&lt;p>MD5: &lt;code>A13E534F18967AF816FBE0EF83CC2AB8&lt;/code>&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>File: &lt;code>~ex.dat&lt;/code>&lt;/p>
+&lt;/blockquote></description></item></channel></rss>
